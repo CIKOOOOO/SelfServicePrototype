@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SelfServicePrototype</string>
+    <string name="cancel">Cancel</string>
+    <string name="continues">Continue</string>
+    <string name="order">Order</string>
+    <string name="add">Add</string>
+    <string name="confirm_order">Confirm Your orders</string>
+    <string name="order_qr_reader">Please put your device in front of QR Reader</string>
+    <string name="pref_file" />
+    <string name="pref_order_type_id" />
+    <string name="pref_order_type" />
+
+</resources>
