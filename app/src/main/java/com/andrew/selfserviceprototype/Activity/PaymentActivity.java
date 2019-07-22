@@ -218,7 +218,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
                 @Override
                 public void onResponse(Call<Transaction.TransactionDetail> call, Response<Transaction.TransactionDetail> response) {
                     if (response.body().getResponse().equals("ok")) {
-                        Log.e(TAG, "Detail of transaction is already SEND. GOOD NEWS FOR EVERYONE!");
+                        Log.i(TAG, "Detail of transaction is already SEND. GOOD NEWS FOR EVERYONE!");
                     } else {
                         Log.e(TAG, "THIS IS NOT GOOD EVERYONE, CHECK EVERYTHING BECAUSE IT'S MONEY WE TALKING ABOUT!!");
                     }
@@ -244,7 +244,6 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String s) {
-        Log.e("asd", TID);
         Call<Transaction> call = apiInterface.updateFeedback("update_transaction", TID, i);
         call.enqueue(new Callback<Transaction>() {
             @Override
