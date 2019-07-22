@@ -58,6 +58,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     private PrefConfig prefConfig;
 
     private boolean isDataSend;
+    private int TID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initVar() {
+        TID = -1;
         isDataSend = false;
         prefConfig = new PrefConfig(this);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
@@ -242,7 +244,23 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String s) {
-        relative_repeat_order.setVisibility(View.VISIBLE);
+        Call<Transaction> call = apiInterface.updateFeedback("update_transaction", TID, i);
+        call.enqueue(new Callback<Transaction>() {
+            @Override
+            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                if(response.body().getResponse().equals("ok")){
+                    relative_repeat_order.setVisibility(View.VISIBLE);
+                }
+                else{
+                    Log.e(TAG,"HOW COME DUDE?");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Transaction> call, Throwable t) {
+                Log.e(TAG,"NEED TO CHECK YOUR INTERNET CONNECTION OR MAYBE MY CODE IS SUCKS");
+            }
+        });
     }
 
     private class InitRunner extends AsyncTask<Void, Void, Void> {

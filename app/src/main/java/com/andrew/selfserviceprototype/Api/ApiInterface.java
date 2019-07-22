@@ -40,4 +40,8 @@ public interface ApiInterface {
     Call<Transaction.TransactionDetail> sendTransactionDetail(@Field("response") String response
             , @Field("tid") String tid, @Field("pid") String pid
             , @Field("unit_price") long unit_price, @Field("quantity") int quantity);
+
+    @POST("transaction.php")
+    @FormUrlEncoded
+    Call<Transaction> updateFeedback(@Field("response") String response, @Field("TID") int TID, @Field("feedback_star") int feedback_star);
 }
