@@ -37,6 +37,7 @@ import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ConfirmOrderActivity extends BaseActivity implements View.OnClickListener {
     public static final String CONFIRM_GETTING_MERCHANT_DATA = "confirm_data";
@@ -132,7 +133,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     }
 
     private class ContinueRunner extends AsyncTask<Void, Void, Void> {
-        String TID = String.valueOf(Math.random() * 1000 + 1);
+        String TID = String.valueOf(new Random().nextInt(1000));
         Transaction transaction = new Transaction(TID, merchantData.getMerchantId()
                 , taxAmount, Utils.getTime("yyyy/MM/dd"), "not_finish");
 

@@ -58,7 +58,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     private PrefConfig prefConfig;
 
     private boolean isDataSend;
-    private int TID;
+    private String TID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,6 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initVar() {
-        TID = -1;
         isDataSend = false;
         prefConfig = new PrefConfig(this);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
@@ -103,6 +102,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         if (intent.getParcelableArrayListExtra(PAYMENT_GETTING_DATA_LIST) != null && intent.getParcelableExtra(PAYMENT_GETTING_DATA) != null) {
             transactionDetailList.addAll(intent.<Transaction.TransactionDetail>getParcelableArrayListExtra(PAYMENT_GETTING_DATA_LIST));
             transaction = intent.getParcelableExtra(PAYMENT_GETTING_DATA);
+            TID = transaction.getTransactionId();
         }
 
         new InitRunner().execute();
@@ -218,9 +218,9 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
                 @Override
                 public void onResponse(Call<Transaction.TransactionDetail> call, Response<Transaction.TransactionDetail> response) {
                     if (response.body().getResponse().equals("ok")) {
-                        Log.e("asd", "OK");
+                        Log.e(TAG, "Detail of transaction is already SEND. GOOD NEWS FOR EVERYONE!");
                     } else {
-                        Log.e("asd", "Not OK");
+                        Log.e(TAG, "THIS IS NOT GOOD EVERYONE, CHECK EVERYTHING BECAUSE IT'S MONEY WE TALKING ABOUT!!");
                     }
                 }
 
@@ -244,21 +244,21 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String s) {
+        Log.e("asd", TID);
         Call<Transaction> call = apiInterface.updateFeedback("update_transaction", TID, i);
         call.enqueue(new Callback<Transaction>() {
             @Override
             public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                if(response.body().getResponse().equals("ok")){
+                if (response.body().getResponse().equals("ok")) {
                     relative_repeat_order.setVisibility(View.VISIBLE);
-                }
-                else{
-                    Log.e(TAG,"HOW COME DUDE?");
+                } else {
+                    Log.e(TAG, "HOW COME DUDE?");
                 }
             }
 
             @Override
             public void onFailure(Call<Transaction> call, Throwable t) {
-                Log.e(TAG,"NEED TO CHECK YOUR INTERNET CONNECTION OR MAYBE MY CODE IS SUCKS");
+                Log.e(TAG, "NEED TO CHECK YOUR INTERNET CONNECTION OR MAYBE MY CODE IS SUCKS");
             }
         });
     }

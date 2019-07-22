@@ -43,5 +43,5 @@ public interface ApiInterface {
 
     @POST("transaction.php")
     @FormUrlEncoded
-    Call<Transaction> updateFeedback(@Field("response") String response, @Field("TID") int TID, @Field("feedback_star") int feedback_star);
+    Call<Transaction> updateFeedback(@Field("response") String response, @Field("tid") String TID, @Field("feedback_star") int feedback_star);
 }
