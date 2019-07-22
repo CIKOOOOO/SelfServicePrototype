@@ -45,6 +45,8 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     public static final String PAYMENT_GETTING_DATA_LIST = "payment_data_list";
 
     private static final String TAG = PaymentActivity.class.getSimpleName();
+    
+    private static boolean isDataSend;
 
     private RelativeLayout relative_payment, relative_payment_success, relative_repeat_order;
     private ImageView image_qr;
@@ -57,7 +59,6 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     private ApiInterface apiInterface;
     private PrefConfig prefConfig;
 
-    private boolean isDataSend;
     private String TID;
 
     @Override
