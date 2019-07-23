@@ -27,7 +27,9 @@
         <activity
             android:name=".Activity.OrderActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Utils.BaseActivity" />
+        <activity
+            android:name=".Utils.BaseActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".Activity.ConfirmOrderActivity" />
         <activity android:name=".Activity.PaymentActivity" />
         <activity android:name=".Activity.OrderTypeActivity" />

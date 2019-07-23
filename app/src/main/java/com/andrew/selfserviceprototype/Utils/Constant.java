@@ -5,6 +5,7 @@ import com.andrew.selfserviceprototype.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,5 +18,13 @@ public class Constant {
 
     public static final int MAX_ALPHA = 220;
     public static final long MAX_DURATION_PAYMENT = 5000;
+
+    private static final String[] ratingList = {"Tidak Puas", "Kurang Puas", "Cukup", "Puas", "Sangat Puas"};
+
+    public static List<String> getRatingList() {
+        List<String> list = new ArrayList<>();
+        Collections.addAll(list, ratingList);
+        return list;
+    }
 
 }

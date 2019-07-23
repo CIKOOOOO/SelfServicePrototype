@@ -1,6 +1,7 @@
 package com.andrew.selfserviceprototype.Activity;
 
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.andrew.selfserviceprototype.Adapter.PaymentAdapter;
+import com.andrew.selfserviceprototype.Adapter.RatingAdapter;
 import com.andrew.selfserviceprototype.Api.ApiClient;
 import com.andrew.selfserviceprototype.Api.ApiInterface;
 import com.andrew.selfserviceprototype.Model.Payment;
@@ -31,6 +33,7 @@ import com.andrew.selfserviceprototype.Utils.DecodeBitmap;
 import com.andrew.selfserviceprototype.Utils.PrefConfig;
 import com.andrew.selfserviceprototype.Utils.Utils;
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
@@ -40,17 +43,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PaymentActivity extends BaseActivity implements View.OnClickListener, PaymentAdapter.choosingPayment, RatingDialogListener {
+public class PaymentActivity extends BaseActivity implements View.OnClickListener, PaymentAdapter.choosingPayment, RatingDialogListener, RatingAdapter.starOnClick {
     public static final String PAYMENT_GETTING_DATA = "payment_data";
     public static final String PAYMENT_GETTING_DATA_LIST = "payment_data_list";
 
     private static final String TAG = PaymentActivity.class.getSimpleName();
-    
+
     private static boolean isDataSend;
 
-    private RelativeLayout relative_payment, relative_payment_success, relative_repeat_order;
+    private RelativeLayout relative_payment, relative_payment_success, relative_repeat_order, relative_rate;
     private ImageView image_qr;
-    private TextView text_payment_type;
+    private TextView text_payment_type, text_rate;
 
     private Transaction transaction;
     private PaymentAdapter paymentAdapter;
@@ -58,8 +61,11 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     private List<Payment> paymentList;
     private ApiInterface apiInterface;
     private PrefConfig prefConfig;
+    private RatingAdapter ratingAdapter;
 
+    private List<String> rateList;
     private String TID;
+    private int rate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     private void initVar() {
         isDataSend = false;
+        rate = -1;
         prefConfig = new PrefConfig(this);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 
@@ -78,17 +85,22 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         text_payment_type = findViewById(R.id.text_payment);
         relative_payment_success = findViewById(R.id.relative_payment_success);
         relative_repeat_order = findViewById(R.id.relative_repeat_order);
+        text_rate = findViewById(R.id.text_rate_payment);
+        relative_rate = findViewById(R.id.relative_rate_payment);
 
         RelativeLayout relative_content_payment = findViewById(R.id.relative_payment_01);
         ImageButton arrow_back = findViewById(R.id.image_button_back_payment);
         RecyclerView recyclerView = findViewById(R.id.recycler_payment);
         Button btn_yes = findViewById(R.id.btn_yes_order_again_payment);
         Button btn_no = findViewById(R.id.btn_no_order_again_payment);
+        Button submit_rate = findViewById(R.id.btn_submit_rate_payment);
 
+        rateList = new ArrayList<>(Constant.getRatingList());
         paymentList = new ArrayList<>();
         transactionDetailList = new ArrayList<>();
 
         paymentAdapter = new PaymentAdapter(this, paymentList, this);
+        ratingAdapter = new RatingAdapter(this, rateList, this);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(paymentAdapter);
@@ -98,6 +110,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         relative_content_payment.setOnClickListener(this);
         btn_no.setOnClickListener(this);
         btn_yes.setOnClickListener(this);
+        submit_rate.setOnClickListener(this);
 
         Intent intent = getIntent();
         if (intent.getParcelableArrayListExtra(PAYMENT_GETTING_DATA_LIST) != null && intent.getParcelableExtra(PAYMENT_GETTING_DATA) != null) {
@@ -127,6 +140,26 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
             case R.id.btn_no_order_again_payment:
                 finishAffinity();
                 startActivity(new Intent(this, MainActivity.class));
+                break;
+            case R.id.btn_submit_rate_payment:
+                if (rate > 0) {
+                    Call<Transaction> call = apiInterface.updateFeedback("update_transaction", TID, rate);
+                    call.enqueue(new Callback<Transaction>() {
+                        @Override
+                        public void onResponse(Call<Transaction> call, Response<Transaction> response) {
+                            if (response.body().getResponse().equals("ok")) {
+                                relative_repeat_order.setVisibility(View.VISIBLE);
+                            } else {
+                                Log.e(TAG, "HOW COME DUDE?");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Transaction> call, Throwable t) {
+                            Log.e(TAG, "NEED TO CHECK YOUR INTERNET CONNECTION OR MAYBE MY CODE IS SUCKS");
+                        }
+                    });
+                }
                 break;
         }
     }
@@ -183,19 +216,13 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
                         @Override
                         public void run() {
                             relative_payment_success.setVisibility(View.GONE);
-                            new AppRatingDialog.Builder()
-                                    .setPositiveButtonText("Submit")
-                                    .setNoteDescriptions(Arrays.asList("Tidak Puas", "Kurang Puas", "Cukup Puas", "Puas", "Sangat Puas"))
-                                    .setTitle("Please rate the quality of our services")
-                                    .setDefaultRating(0)
-                                    .setCommentInputEnabled(false)
-                                    .setStarColor(R.color.blue_palette)
-                                    .setTitleTextColor(R.color.colorPrimaryDark)
-                                    .setCommentBackgroundColor(R.color.colorPrimaryDark)
-                                    .setWindowAnimation(R.style.MyDialogFadeAnimation)
-                                    .setCanceledOnTouchOutside(false)
-                                    .create(PaymentActivity.this)
-                                    .show();
+
+                            RecyclerView recyclerView = findViewById(R.id.recycler_rating_payment);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(PaymentActivity.this, RecyclerView.HORIZONTAL, false));
+                            recyclerView.setAdapter(ratingAdapter);
+
+                            relative_rate.setBackground(getResources().getDrawable(R.drawable.asset_background_food));
+                            relative_rate.setVisibility(View.VISIBLE);
                         }
                     }, 3000);
                 } else {
@@ -245,22 +272,15 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String s) {
-        Call<Transaction> call = apiInterface.updateFeedback("update_transaction", TID, i);
-        call.enqueue(new Callback<Transaction>() {
-            @Override
-            public void onResponse(Call<Transaction> call, Response<Transaction> response) {
-                if (response.body().getResponse().equals("ok")) {
-                    relative_repeat_order.setVisibility(View.VISIBLE);
-                } else {
-                    Log.e(TAG, "HOW COME DUDE?");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Transaction> call, Throwable t) {
-                Log.e(TAG, "NEED TO CHECK YOUR INTERNET CONNECTION OR MAYBE MY CODE IS SUCKS");
-            }
-        });
+    }
+
+    @Override
+    public void clickRate(int pos) {
+        ratingAdapter.setLastPosition(pos);
+        ratingAdapter.notifyDataSetChanged();
+        text_rate.setText(rateList.get(pos));
+        rate = pos + 1;
     }
 
     private class InitRunner extends AsyncTask<Void, Void, Void> {
