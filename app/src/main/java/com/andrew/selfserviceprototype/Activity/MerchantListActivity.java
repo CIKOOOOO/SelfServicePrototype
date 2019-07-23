@@ -82,15 +82,16 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
             intent.putExtra(OrderActivity.MERCHANT_DATA, (Parcelable) merchantData.get(position));
             startActivity(intent);
         } else {
-            if (position == merchantData.size() - 1) {
-                recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, new RecyclerView.State(), merchantData.size());
-            }
-            recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, new RecyclerView.State(), position);
-            merchantListAdapter.notifyDataSetChanged();
+//            if (position == merchantData.size() - 1) {
+//                recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, new RecyclerView.State(), merchantData.size());
+//            }
+//            recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, new RecyclerView.State(), position);
+            recyclerView.smoothScrollToPosition(position);
+//            merchantListAdapter.notifyDataSetChanged();
         }
     }
-
     @Override
+
     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
         merchantListAdapter.setLastPosition(linearLayoutManager.findFirstCompletelyVisibleItemPosition());
         merchantListAdapter.notifyDataSetChanged();

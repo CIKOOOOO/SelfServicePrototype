@@ -61,7 +61,13 @@ public class MerchantListAdapter extends RecyclerView.Adapter<MerchantListAdapte
 
         holder.textView.setText(md.getMerchantName());
 
-        if (position == lastPosition) {
+        if (lastPosition == merchantData.size() - 1) {
+            Picasso.get()
+                    .load(Constant.URL + md.getMerchantImagePlace())
+                    .into(holder.imageView);
+            holder.imageView.getLayoutParams().width = 700;
+            holder.imageView.getLayoutParams().height = 700;
+        } else if (position == lastPosition && lastPosition != merchantData.size() - 1) {
             Picasso.get()
                     .load(Constant.URL + md.getMerchantImagePlace())
                     .into(holder.imageView);
