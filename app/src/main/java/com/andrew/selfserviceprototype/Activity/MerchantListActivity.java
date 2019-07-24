@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,7 +37,7 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
 
     private MerchantListAdapter merchantListAdapter;
     private RecyclerView recyclerView;
-    private LinearSnapHelper linearSnapHelper;
+    private SnapHelper linearSnapHelper;
     private LinearLayoutManager linearLayoutManager;
     private List<MerchantData> merchantData;
 
@@ -64,6 +66,7 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
         if (intent.getParcelableArrayListExtra(GETTING_MERCHANT_DATA) != null) {
             merchantData.addAll(intent.<MerchantData>getParcelableArrayListExtra(GETTING_MERCHANT_DATA));
             if (merchantData.size() > 0) {
+                merchantData.add(new MerchantData("", "", "", "", "", "", ""));
                 Log.e(TAG, "Merchant DATA is NOT NULL");
                 merchantListAdapter = new MerchantListAdapter(this, merchantData, this);
                 recyclerView.setAdapter(merchantListAdapter);
@@ -87,12 +90,17 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
 //            }
 //            recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, new RecyclerView.State(), position);
             recyclerView.smoothScrollToPosition(position);
-//            merchantListAdapter.notifyDataSetChanged();
+            merchantListAdapter.setLastPosition(position);
+            merchantListAdapter.notifyDataSetChanged();
         }
     }
-    @Override
 
+    @Override
     public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+//        int pos = linearSnapHelper.findTargetSnapPosition(linearLayoutManager, i1, i);
+//        merchantListAdapter.setLastPosition(pos);
+        if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() == merchantData.size())
+            return;
         merchantListAdapter.setLastPosition(linearLayoutManager.findFirstCompletelyVisibleItemPosition());
         merchantListAdapter.notifyDataSetChanged();
     }

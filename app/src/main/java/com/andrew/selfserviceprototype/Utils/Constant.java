@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Constant {
-    public static final String URL = "http://192.168.43.55:80";
+    public static final String URL = "http://192.168.43.154:80";
     public static final String FULL_URL = URL + "/self_service/";
     public static final String PRODUCT_URL = URL + "/self_service/asset/product/";
 
