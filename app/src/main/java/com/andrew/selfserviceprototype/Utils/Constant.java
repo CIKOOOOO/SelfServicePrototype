@@ -18,6 +18,7 @@ public class Constant {
 
     public static final int MAX_ALPHA = 220;
     public static final long MAX_DURATION_PAYMENT = 5000;
+    public static final long MAX_DURATION_IDLE = 20000;
 
     private static final String[] ratingList = {"Tidak Puas", "Kurang Puas", "Cukup", "Puas", "Sangat Puas"};
 

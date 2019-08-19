@@ -6,6 +6,7 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -30,10 +31,15 @@
         <activity
             android:name=".Utils.BaseActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activity.ConfirmOrderActivity" />
-        <activity android:name=".Activity.PaymentActivity" />
-        <activity android:name=".Activity.OrderTypeActivity" />
-        <activity android:name=".Activity.FinishActivity"></activity>
+        <activity
+            android:name=".Activity.ConfirmOrderActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.PaymentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.OrderTypeActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

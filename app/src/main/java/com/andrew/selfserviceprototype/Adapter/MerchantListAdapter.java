@@ -32,7 +32,7 @@ public class MerchantListAdapter extends RecyclerView.Adapter<MerchantListAdapte
     private List<MerchantData> merchantData;
 
     public interface imageOnClick {
-        void onClick(int position, boolean isMoveActivity);
+        void onClick(int position);
     }
 
     public void setLastPosition(int lastPosition) {
@@ -61,33 +61,34 @@ public class MerchantListAdapter extends RecyclerView.Adapter<MerchantListAdapte
 
         holder.textView.setText(md.getMerchantName());
 
-        if (position == lastPosition) {
-            Picasso.get()
-                    .load(Constant.URL + md.getMerchantImagePlace())
-                    .into(holder.imageView);
-            holder.imageView.getLayoutParams().width = 700;
-            holder.imageView.getLayoutParams().height = 700;
-        } else {
-            Picasso.get()
-                    .load(Constant.URL + md.getMerchantImagePlace())
-                    .into(holder.imageView);
-            holder.imageView.getLayoutParams().width = 400;
-            holder.imageView.getLayoutParams().height = 400;
-        }
+        Picasso.get()
+                .load(Constant.URL + md.getMerchantIcon())
+                .into(holder.imageView);
+
+//        if (position == lastPosition) {
+//            holder.imageView.getLayoutParams().width = 700;
+//            holder.imageView.getLayoutParams().height = 700;
+//        } else {
+//            Picasso.get()
+//                    .load(Constant.URL + md.getMerchantIcon())
+//                    .into(holder.imageView);
+//            holder.imageView.getLayoutParams().width = 400;
+//            holder.imageView.getLayoutParams().height = 400;
+//        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (lastPosition == merchantData.size() - 1) {
-                    // Data is null... need to add this one because it will prevent error that recyclerview cannot show the last data
-                    // Trust me, i don't want it either
-                } else if (lastPosition != position) {
-                    imageOnClick.onClick(position, false);
-                    lastPosition = position;
-                } else {
+//                if (lastPosition == merchantData.size() - 1) {
+//                    // Data is null... need to add this one because it will prevent error that recyclerview cannot show the last data
+//                    // Trust me, i don't want it either
+//                } else if (lastPosition != position) {
+//                    imageOnClick.onClick(position);
+//                    lastPosition = position;
+//                } else {
                     // Here is to process when user click the center of image
-                    imageOnClick.onClick(position, true);
-                }
+                    imageOnClick.onClick(position);
+//                }
             }
         });
     }

@@ -31,14 +31,14 @@ public interface ApiInterface {
     @POST("transaction.php")
     @FormUrlEncoded
     Call<Transaction> sendTransaction(@Field("response") String response, @Field("tid") String tid
-            , @Field("mid") String mid, @Field("tax") long tax, @Field("transaction_date") String transaction_date
+            , @Field("tax") long tax, @Field("transaction_date") String transaction_date
             , @Field("transaction_time") String transaction_time, @Field("payment_id") String payment_id
             , @Field("order_type_id") String order_type_id, @Field("order_status") String order_status);
 
     @POST("transaction.php")
     @FormUrlEncoded
     Call<Transaction.TransactionDetail> sendTransactionDetail(@Field("response") String response
-            , @Field("tid") String tid, @Field("pid") String pid
+            , @Field("tid") String tid,@Field("mid") String mid, @Field("pid") String pid
             , @Field("unit_price") long unit_price, @Field("quantity") int quantity);
 
     @POST("transaction.php")

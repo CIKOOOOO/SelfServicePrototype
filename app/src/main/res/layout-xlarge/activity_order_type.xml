@@ -22,10 +22,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Which one do you \n prefer?"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:maxLines="2"
+            android:text="Which one do you prefer?"
             android:textAlignment="center"
             android:textColor="@color/black_color"
-            android:textSize="130sp" />
+            android:textSize="@dimen/text_super_large_70sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_order_type"
@@ -33,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="40dp"
             android:layout_marginEnd="10dp"
             android:overScrollMode="never" />
     </LinearLayout>

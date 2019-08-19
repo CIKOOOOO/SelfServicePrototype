@@ -22,15 +22,18 @@
             android:layout_width="500dp"
             android:layout_height="250dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_dummy_01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/image_icon_confirm_order"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
             android:text="@string/confirm_order"
+            android:textAlignment="center"
             android:textColor="@color/black_color"
             android:textSize="60sp" />
 
@@ -39,62 +42,75 @@
             android:layout_height="match_parent"
             android:layout_above="@id/ll_confirm_order_01"
             android:layout_below="@id/text_dummy_01"
+            android:layout_marginTop="30dp"
             android:fillViewport="true">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ll_confirm_order_02"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/rectangle_rounded_bombay"
-                android:orientation="vertical">
+                android:background="@drawable/rectangle_rounded_bombay">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_confirm_order"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:nestedScrollingEnabled="false"
-                    android:scrollbarSize="2dp" />
+                    android:layout_above="@id/linear_container_text_confirm_order"
+                    android:layout_alignParentTop="true"
+                    android:fadeScrollbars="true"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollbarSize="5dp"
+                    android:scrollbarThumbVertical="@color/raven_palette"
+                    android:scrollbars="vertical" />
 
-                <View
+                <LinearLayout
+                    android:id="@+id/linear_container_text_confirm_order"
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="40dp"
-                    android:background="@drawable/dashed_line"
-                    android:layerType="software" />
-
-                <TextView
-                    android:id="@+id/text_price_confirm_order"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:textSize="40sp" />
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_tax_confirm_order"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:textSize="40sp" />
+                    <View
+                        android:id="@+id/view_cross"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/dashed_line"
+                        android:layerType="software" />
 
-                <TextView
-                    android:id="@+id/text_total_price_confirm_order"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:textSize="40sp" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/text_price_confirm_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textSize="40sp" />
+
+                    <TextView
+                        android:id="@+id/text_tax_confirm_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:textSize="40sp" />
+
+                    <TextView
+                        android:id="@+id/text_total_price_confirm_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:textSize="40sp" />
+                </LinearLayout>
+
+            </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
@@ -109,23 +125,29 @@
                 android:id="@+id/btn_cancel_confirm_order"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/button_height"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_red"
+                android:background="@drawable/selection_athens_iron"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="50sp" />
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_large_45sp" />
 
             <Button
                 android:id="@+id/btn_order_confirm_order"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/button_height"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="20dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_blue"
-                android:text="@string/order"
+                android:background="@drawable/selection_athens_iron"
+                android:text="Checkout"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="50sp" />
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_large_45sp" />
         </LinearLayout>
     </RelativeLayout>
 

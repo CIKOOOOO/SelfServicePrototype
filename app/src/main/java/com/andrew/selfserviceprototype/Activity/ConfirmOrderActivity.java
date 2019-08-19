@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
 import com.andrew.selfserviceprototype.Utils.DecodeBitmap;
+import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.andrew.selfserviceprototype.Utils.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -51,7 +53,6 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     private ImageView image_icon;
     private RelativeLayout relative_loading;
 
-    private MerchantData merchantData;
     private ConfirmOrderAdapter confirmOrderAdapter;
 
     private List<Integer> quantityList;
@@ -71,7 +72,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
 
         Button btn_cancel = findViewById(R.id.btn_cancel_confirm_order);
         Button btn_order = findViewById(R.id.btn_order_confirm_order);
-        LinearLayout linearLayout = findViewById(R.id.ll_confirm_order_02);
+        RelativeLayout linearLayout = findViewById(R.id.ll_confirm_order_02);
 
         image_icon = findViewById(R.id.image_icon_confirm_order);
         recyclerView = findViewById(R.id.recycler_confirm_order);
@@ -84,6 +85,10 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         orderList = new ArrayList<>();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        confirmOrderAdapter = new ConfirmOrderAdapter(ConfirmOrderActivity.this, orderList, quantityList);
+
+        recyclerView.setAdapter(confirmOrderAdapter);
 
         linearLayout.getBackground().setAlpha(150);
 
@@ -101,6 +106,9 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     private long getTotalPrice(List<Product> products) {
         long totalPrice = 0;
         for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getMerchantId().isEmpty()) {
+                continue;
+            }
             totalPrice += products.get(i).getProductPrice() * quantityList.get(i);
         }
         return totalPrice;
@@ -134,7 +142,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
 
     private class ContinueRunner extends AsyncTask<Void, Void, Void> {
         String TID = String.valueOf(new Random().nextInt(1000));
-        Transaction transaction = new Transaction(TID, merchantData.getMerchantId()
+        Transaction transaction = new Transaction(TID
                 , taxAmount, Utils.getTime("yyyy/MM/dd"), "not_finish");
 
         List<Transaction.TransactionDetail> details = new ArrayList<>();
@@ -145,7 +153,8 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         protected Void doInBackground(Void... voids) {
             for (int i = 0; i < orderList.size(); i++) {
                 Product product = orderList.get(i);
-                Transaction.TransactionDetail transactionDetail = new Transaction.TransactionDetail(TID, product.getProductId(), product.getProductPrice(), quantityList.get(i));
+                if (product.getProductPrice() == 0) continue;
+                Transaction.TransactionDetail transactionDetail = new Transaction.TransactionDetail(TID, product.getMerchantId(), product.getProductId(), product.getProductPrice(), quantityList.get(i));
                 details.add(transactionDetail);
             }
 
@@ -172,18 +181,20 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected Void doInBackground(Void... voids) {
             synchronized (this) {
-                Intent intent = getIntent();
-                if (intent.getParcelableExtra(CONFIRM_GETTING_MERCHANT_DATA) != null) {
-                    merchantData = intent.getParcelableExtra(CONFIRM_GETTING_MERCHANT_DATA);
+                for (int i = 0; i < StaticData.MERCHANT_LIST.size(); i++) {
+                    if (StaticData.PRODUCT_ORDER_MAP.containsKey(StaticData.MERCHANT_LIST.get(i).getMerchantId())) {
+                        if (StaticData.PRODUCT_ORDER_MAP.get(StaticData.MERCHANT_LIST.get(i).getMerchantId()).size() > 0) {
+                            orderList.add(new Product("", StaticData.MERCHANT_LIST.get(i).getMerchantId(), "", 0, "", ""));
+                            quantityList.add(-1);
+                            orderList.addAll(StaticData.PRODUCT_ORDER_MAP.get(StaticData.MERCHANT_LIST.get(i).getMerchantId()));
+                            quantityList.addAll(StaticData.QUANTITY_ORDER_MAP.get(StaticData.MERCHANT_LIST.get(i).getMerchantId()));
+                        }
+                    }
                 }
-
-                if (intent.getParcelableArrayListExtra(CONFIRM_GETTING_ORDER_LIST) != null && intent.getIntegerArrayListExtra(CONFIRM_GETTING_QUANTITY_LIST) != null) {
-                    orderList.addAll(intent.<Product>getParcelableArrayListExtra(CONFIRM_GETTING_ORDER_LIST));
-                    quantityList.addAll(intent.getIntegerArrayListExtra(CONFIRM_GETTING_QUANTITY_LIST));
-                    confirmOrderAdapter = new ConfirmOrderAdapter(ConfirmOrderActivity.this, orderList, quantityList);
-                    price = getTotalPrice(orderList);
-                    taxAmount = price / 10;
-                }
+                price = getTotalPrice(orderList);
+                taxAmount = price / 10;
+                confirmOrderAdapter.setList(orderList, quantityList);
+                confirmOrderAdapter.notifyDataSetChanged();
             }
             return null;
         }
@@ -198,18 +209,22 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         protected void onPostExecute(Void s) {
             super.onPostExecute(s);
 
-            Picasso.get()
-                    .load(Constant.URL + merchantData.getMerchantIcon())
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(image_icon);
+//            Picasso.get()
+//                    .load(Constant.URL + merchantData.getMerchantIcon())
+//                    .networkPolicy(NetworkPolicy.NO_CACHE)
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                    .into(image_icon);
 
-            DecodeBitmap.setScaledImageView((ImageView) findViewById(R.id.image_confirm_order_background), R.drawable.asset_background_grid, ConfirmOrderActivity.this);
+            Picasso.get()
+                    .load(R.drawable.asset_background_grid)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into((ImageView) findViewById(R.id.image_confirm_order_background));
+
+//            DecodeBitmap.setScaledImageView((ImageView) findViewById(R.id.image_confirm_order_background), R.drawable.asset_background_grid, ConfirmOrderActivity.this);
 
             text_price.setText("Sub Total : IDR " + Utils.priceFormat(price) + " ,-");
             text_tax.setText("Tax 10% : IDR " + Utils.priceFormat(taxAmount) + " ,-");
             text_total_price.setText("Total Price : IDR " + Utils.priceFormat(price + taxAmount) + " ,-");
-            recyclerView.setAdapter(confirmOrderAdapter);
             relative_loading.setVisibility(View.GONE);
         }
     }

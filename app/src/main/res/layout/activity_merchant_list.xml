@@ -17,20 +17,87 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.synnapps.carouselview.CarouselView
+            android:id="@+id/carousel_merchant_list"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:animateLayoutChanges="true"
+            app:indicatorVisibility="visible"
+            app:slideInterval="3000" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Order Here"
-            android:textColor="@color/black_color"
-            android:textSize="45sp" />
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:text="Order Here"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/image_button_trolley_merchant_list"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_trolley_blue" />
+
+                    <TextView
+                        android:id="@+id/text_quantity_product_merchant_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="-10dp"
+                        android:layout_toEndOf="@id/image_button_trolley_merchant_list"
+                        android:background="@drawable/rectangle_rounded_endouver"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textColor="@color/white_color"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/text_price_merchant_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rectangle_rounded_endouver"
+                    android:minWidth="50dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:text="Rp 0,-"
+                    android:textAlignment="center"
+                    android:textColor="@color/white_color"
+                    android:textSize="@dimen/text_super_small_12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_merchant_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:overScrollMode="never" />
     </LinearLayout>
 </androidx.appcompat.widget.ContentFrameLayout>

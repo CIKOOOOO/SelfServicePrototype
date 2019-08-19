@@ -14,9 +14,6 @@ public class Transaction implements Parcelable {
     @SerializedName("transaction_id")
     private String transactionId;
 
-    @SerializedName("merchant_id")
-    private String merchantId;
-
     @SerializedName("tax_amount")
     private long taxAmount;
 
@@ -32,9 +29,8 @@ public class Transaction implements Parcelable {
     @SerializedName("order_status")
     private String orderStatus;
 
-    public Transaction(String transactionId, String merchantId, long taxAmount, String transactionDate, String orderStatus) {
+    public Transaction(String transactionId, long taxAmount, String transactionDate, String orderStatus) {
         this.transactionId = transactionId;
-        this.merchantId = merchantId;
         this.taxAmount = taxAmount;
         this.transactionDate = transactionDate;
         this.orderStatus = orderStatus;
@@ -43,7 +39,6 @@ public class Transaction implements Parcelable {
     protected Transaction(Parcel in) {
         response = in.readString();
         transactionId = in.readString();
-        merchantId = in.readString();
         taxAmount = in.readLong();
         transactionDate = in.readString();
         transactionTime = in.readString();
@@ -103,10 +98,6 @@ public class Transaction implements Parcelable {
         return orderStatus;
     }
 
-    public String getMerchantId() {
-        return merchantId;
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -116,7 +107,6 @@ public class Transaction implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(response);
         parcel.writeString(transactionId);
-        parcel.writeString(merchantId);
         parcel.writeLong(taxAmount);
         parcel.writeString(transactionDate);
         parcel.writeString(transactionTime);
@@ -124,7 +114,7 @@ public class Transaction implements Parcelable {
         parcel.writeString(orderStatus);
     }
 
-    public static class TransactionDetail implements Parcelable{
+    public static class TransactionDetail implements Parcelable {
         @SerializedName("response")
         private String response;
 
@@ -133,6 +123,9 @@ public class Transaction implements Parcelable {
 
         @SerializedName("transaction_id")
         private String transactionId;
+
+        @SerializedName("merchant_id")
+        private String merchantId;
 
         @SerializedName("product_id")
         private String productId;
@@ -143,17 +136,21 @@ public class Transaction implements Parcelable {
         @SerializedName("quantity")
         private int quantity;
 
-        public TransactionDetail(String transactionId, String productId, long unitPrice, int quantity) {
+
+        public TransactionDetail(String transactionId, String merchantId, String productId, long unitPrice, int quantity) {
             this.transactionId = transactionId;
+            this.merchantId = merchantId;
             this.productId = productId;
             this.unitPrice = unitPrice;
             this.quantity = quantity;
         }
 
+
         protected TransactionDetail(Parcel in) {
             response = in.readString();
             transactionDetailList = in.createTypedArrayList(TransactionDetail.CREATOR);
             transactionId = in.readString();
+            merchantId = in.readString();
             productId = in.readString();
             unitPrice = in.readLong();
             quantity = in.readInt();
@@ -195,6 +192,10 @@ public class Transaction implements Parcelable {
             return quantity;
         }
 
+        public String getMerchantId() {
+            return merchantId;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -205,6 +206,7 @@ public class Transaction implements Parcelable {
             parcel.writeString(response);
             parcel.writeTypedList(transactionDetailList);
             parcel.writeString(transactionId);
+            parcel.writeString(merchantId);
             parcel.writeString(productId);
             parcel.writeLong(unitPrice);
             parcel.writeInt(quantity);

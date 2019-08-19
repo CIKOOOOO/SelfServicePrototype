@@ -136,7 +136,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
+            android:maxLines="2"
             android:text="Please rate the quality of our services"
+            android:textAlignment="center"
             android:textColor="@color/blue_palette"
             android:textSize="70sp" />
 

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="button_height">150dp</dimen>
+    <dimen name="text_super_small_12sp">12sp</dimen>
+    <dimen name="text_super_small_15sp">15sp</dimen>
+    <dimen name="text_small_17sp">17sp</dimen>
+    <dimen name="text_medium_25sp">25sp</dimen>
+    <dimen name="text_large_30sp">30sp</dimen>
+    <dimen name="text_large_45sp">45sp</dimen>
+    <dimen name="text_super_large_70sp">70sp</dimen>
 
 
 </resources>

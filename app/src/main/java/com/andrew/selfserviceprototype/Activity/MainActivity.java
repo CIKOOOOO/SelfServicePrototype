@@ -1,6 +1,5 @@
 package com.andrew.selfserviceprototype.Activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,6 +20,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,18 +31,16 @@ import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
 import com.andrew.selfserviceprototype.Utils.DecodeBitmap;
-import com.bumptech.glide.Glide;
-import com.squareup.picasso.MemoryPolicy;
+import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -60,8 +58,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private void initVar() {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/sniglet_reguler.ttf");
+        Typeface typeface2 = Typeface.createFromAsset(getAssets(), "fonts/axure_handwriting.ttf");
 
-        LinearLayout linearLayout = findViewById(R.id.linear_main);
+        RelativeLayout linearLayout = findViewById(R.id.linear_main);
         TextView title = findViewById(R.id.text_title_main);
         TextView touch_to_continue = findViewById(R.id.text_touch_continue);
         ImageView background = findViewById(R.id.image_main_background);
@@ -77,8 +76,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             public void onResponse(Call<MerchantData> call, Response<MerchantData> response) {
                 if (response.body().getMerchantDataList() != null) {
                     merchantData.addAll(response.body().getMerchantDataList());
+                    /*
+                     * We need to clear this merchant static list, because it will causes redundant data
+                     * so we clear, so database can add the new one
+                     * */
+                    StaticData.MERCHANT_LIST.clear();
+                    StaticData.MERCHANT_LIST.addAll(response.body().getMerchantDataList());
                     carouselView.setImageListener(imageListener);
-                    carouselView.setPageCount(merchantData.size());
+                    carouselView.setPageCount(4);
                 } else {
                     Log.e(TAG, "Merchant Data is null!!! CALL EMERGENCY!!!");
                 }
@@ -90,10 +95,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }
         });
 
-        DecodeBitmap.setScaledImageView(background, R.drawable.asset_background, this);
+//        DecodeBitmap.setScaledImageView(background, R.drawable.asset_background, this);
 
         title.setTypeface(typeface);
-        touch_to_continue.startAnimation(getAnimation());
+        touch_to_continue.setTypeface(typeface2);
+//        touch_to_continue.startAnimation(getAnimation());
         linearLayout.setOnClickListener(this);
     }
 
@@ -111,7 +117,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         public void setImageForPosition(int position, final ImageView imageView) {
             Picasso.get()
                     .load(Constant.URL + merchantData.get(position).getMerchantImagePlace())
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .networkPolicy(NetworkPolicy.NO_CACHE)
                     .into(imageView);
         }

@@ -17,6 +17,9 @@ public class Product implements Parcelable {
     @SerializedName("product_id")
     private String productId;
 
+    @SerializedName("mid")
+    private String merchantId;
+
     @SerializedName("product_name")
     private String productName;
 
@@ -29,8 +32,9 @@ public class Product implements Parcelable {
     @SerializedName("product_img")
     private String productImage;
 
-    public Product(String productId, String productName, long productPrice, String productDesc, String productImage) {
+    public Product(String productId, String merchantId, String productName, long productPrice, String productDesc, String productImage) {
         this.productId = productId;
+        this.merchantId = merchantId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDesc = productDesc;
@@ -41,6 +45,7 @@ public class Product implements Parcelable {
         productList = in.createTypedArrayList(Product.CREATOR);
         response = in.readString();
         productId = in.readString();
+        merchantId = in.readString();
         productName = in.readString();
         productPrice = in.readLong();
         productDesc = in.readString();
@@ -71,6 +76,10 @@ public class Product implements Parcelable {
         return productId;
     }
 
+    public String getMerchantId() {
+        return merchantId;
+    }
+
     public String getProductName() {
         return productName;
     }
@@ -87,6 +96,7 @@ public class Product implements Parcelable {
         return productImage;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -97,6 +107,7 @@ public class Product implements Parcelable {
         parcel.writeTypedList(productList);
         parcel.writeString(response);
         parcel.writeString(productId);
+        parcel.writeString(merchantId);
         parcel.writeString(productName);
         parcel.writeLong(productPrice);
         parcel.writeString(productDesc);

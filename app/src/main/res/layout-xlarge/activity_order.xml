@@ -14,7 +14,7 @@
         <ImageView
             android:id="@+id/image_promo_order"
             android:layout_width="match_parent"
-            android:layout_height="700dp"
+            android:layout_height="350dp"
             android:layout_alignParentTop="true"
             android:scaleType="fitXY" />
 
@@ -52,7 +52,7 @@
                         android:layout_marginTop="5dp"
                         android:text="Menu"
                         android:textColor="@color/black_color"
-                        android:textSize="100sp"
+                        android:textSize="50sp"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -61,7 +61,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_marginBottom="3dp"
                         android:fadeScrollbars="true"
                         android:overScrollMode="ifContentScrolls"
@@ -85,7 +85,7 @@
                     android:layout_marginTop="5dp"
                     android:text="My Order"
                     android:textColor="@color/black_color"
-                    android:textSize="100sp"
+                    android:textSize="50sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -115,30 +115,51 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/btn_cancel_order"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/button_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_red"
+                android:background="@drawable/selection_athens_iron"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="50sp" />
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_large_45sp" />
+
+            <Button
+                android:id="@+id/btn_order_again_order"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selection_athens_iron"
+                android:elevation="2dp"
+                android:text="@string/order_again"
+                android:textAllCaps="false"
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_large_45sp" />
 
             <Button
                 android:id="@+id/btn_continue_order"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/button_height"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_blue"
+                android:background="@drawable/rectangle_rounded_athens"
+                android:elevation="2dp"
                 android:text="@string/continues"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="50sp" />
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_large_45sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -151,7 +172,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1300dp"
+            android:layout_height="1100dp"
             android:layout_gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
@@ -160,8 +181,8 @@
 
             <ImageView
                 android:id="@+id/image_order"
-                android:layout_width="700dp"
-                android:layout_height="700dp"
+                android:layout_width="500dp"
+                android:layout_height="500dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
@@ -174,6 +195,8 @@
                 android:layout_below="@id/image_order"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:maxLines="2"
+                android:textAlignment="center"
                 android:textColor="@color/black_color"
                 android:textSize="70sp" />
 
@@ -230,22 +253,28 @@
                     android:id="@+id/btn_cancel_frame_order"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/button_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:background="@drawable/selection_alizarin_softred"
+                    android:background="@drawable/selection_athens_iron"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
-                    android:textColor="@color/white_color"
+                    android:textColor="@color/cerulean_palette"
                     android:textSize="40sp" />
 
                 <Button
                     android:id="@+id/btn_add_frame_order"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/button_height"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:background="@drawable/selection_downy_seagull"
+                    android:background="@drawable/selection_athens_iron"
                     android:text="@string/add"
                     android:textAllCaps="false"
-                    android:textColor="@color/white_color"
+                    android:textColor="@color/cerulean_palette"
                     android:textSize="40sp" />
             </LinearLayout>
         </RelativeLayout>

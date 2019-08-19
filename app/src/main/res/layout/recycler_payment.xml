@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_marginStart="5dp"
+    android:layout_marginTop="20dp"
     android:layout_marginEnd="5dp"
     android:orientation="vertical">
 
@@ -11,12 +12,12 @@
         android:id="@+id/recycler_type_payment"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/selection_turqoise_cerulean"
+        android:background="@drawable/selection_athens_iron"
         android:elevation="2dp"
-        android:paddingTop="25dp"
-        android:paddingBottom="25dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="@color/white_color"
+        android:textColor="@color/cerulean_palette"
         android:textSize="20sp" />
 </RelativeLayout>

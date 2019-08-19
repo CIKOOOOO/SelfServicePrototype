@@ -36,5 +36,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        /*
+         * Cannot move to back activity
+         * So this function should be empty
+         * */
     }
 }

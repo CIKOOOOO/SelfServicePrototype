@@ -3,6 +3,7 @@ package com.andrew.selfserviceprototype.Activity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,13 +32,14 @@ import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
 import com.andrew.selfserviceprototype.Utils.DecodeBitmap;
 import com.andrew.selfserviceprototype.Utils.PrefConfig;
+import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.andrew.selfserviceprototype.Utils.Utils;
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
 import com.stepstone.apprating.listener.RatingDialogListener;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,7 +184,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
                 isDataSend = true;
                 image_qr.setVisibility(View.VISIBLE);
                 DecodeBitmap.setScaledImageView(image_qr, R.drawable.asset_qr, this);
-                text_payment_type.setText("Input Amount \n IDR " + Utils.priceFormat(getTotalPrice() + transaction.getTaxAmount()));
+                text_payment_type.setText("Please scan the barcode");
                 break;
             case "2":
                 isDataSend = true;
@@ -203,7 +205,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     private void sendData(final int pos) {
         Call<Transaction> call = apiInterface.sendTransaction("transaction", transaction.getTransactionId()
-                , transaction.getMerchantId(), transaction.getTaxAmount(), Utils.getTime("dd/MM/yyyy")
+                , transaction.getTaxAmount(), Utils.getTime("dd/MM/yyyy")
                 , Utils.getTime("HH:mm"), paymentList.get(pos).getPaymentId(), prefConfig.getOrderTypeId(), transaction.getOrderStatus());
 
         call.enqueue(new Callback<Transaction>() {
@@ -221,7 +223,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
                             recyclerView.setLayoutManager(new LinearLayoutManager(PaymentActivity.this, RecyclerView.HORIZONTAL, false));
                             recyclerView.setAdapter(ratingAdapter);
 
-                            relative_rate.setBackground(getResources().getDrawable(R.drawable.asset_background_food));
+//                            relative_rate.setBackground(getResources().getDrawable(R.drawable.asset_background_food));
                             relative_rate.setVisibility(View.VISIBLE);
                         }
                     }, 3000);
@@ -240,13 +242,17 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
             Transaction.TransactionDetail tran = transactionDetailList.get(i);
             Call<Transaction.TransactionDetail> transactionDetailCall
                     = apiInterface.sendTransactionDetail("transaction_detail", transaction.getTransactionId()
-                    , tran.getProductId(), tran.getUnitPrice(), tran.getQuantity());
+                    , tran.getMerchantId(), tran.getProductId(), tran.getUnitPrice(), tran.getQuantity());
 
             transactionDetailCall.enqueue(new Callback<Transaction.TransactionDetail>() {
                 @Override
                 public void onResponse(Call<Transaction.TransactionDetail> call, Response<Transaction.TransactionDetail> response) {
                     if (response.body().getResponse().equals("ok")) {
                         Log.i(TAG, "Detail of transaction is already SEND. GOOD NEWS FOR EVERYONE!");
+                        StaticData.PRODUCT_ORDER_MAP.clear();
+                        StaticData.QUANTITY_ORDER_MAP.clear();
+
+                        Log.e("asd", StaticData.PRODUCT_ORDER_MAP.toString());
                     } else {
                         Log.e(TAG, "THIS IS NOT GOOD EVERYONE, CHECK EVERYTHING BECAUSE IT'S MONEY WE TALKING ABOUT!!");
                     }
@@ -271,7 +277,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onPositiveButtonClicked(int i, @NotNull String s) {
+    public void onPositiveButtonClicked(int i, String s) {
 
     }
 
@@ -280,23 +286,22 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         ratingAdapter.setLastPosition(pos);
         ratingAdapter.notifyDataSetChanged();
         text_rate.setText(rateList.get(pos));
-        rate = pos + 1;
+        rate = ++pos;
     }
 
     private class InitRunner extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Glide.with(PaymentActivity.this)
+            Picasso.get()
                     .load(R.drawable.asset_background_food)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into((ImageView) findViewById(R.id.image_payment_background));
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-//            DecodeBitmap.setScaledImageView((ImageView) findViewById(R.id.image_payment_background), R.drawable.asset_background_food, PaymentActivity.this);
-
         }
 
         @Override

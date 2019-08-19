@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,7 +56,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(@NonNull final Holder holder, int position) {
-        Product product = productList.get(position);
+        final Product product = productList.get(position);
         Picasso.get()
                 .load(Constant.PRODUCT_URL + product.getProductImage())
                 .memoryPolicy(MemoryPolicy.NO_CACHE)

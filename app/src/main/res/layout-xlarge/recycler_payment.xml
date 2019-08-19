@@ -4,19 +4,20 @@
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
     android:layout_marginStart="50dp"
+    android:layout_marginTop="40dp"
     android:layout_marginEnd="50dp"
     android:orientation="vertical">
 
     <Button
         android:id="@+id/recycler_type_payment"
         android:layout_width="500dp"
-        android:layout_height="200dp"
-        android:background="@drawable/selection_turqoise_cerulean"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selection_athens_iron"
         android:elevation="2dp"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="@color/white_color"
-        android:textSize="80sp" />
+        android:textColor="@color/cerulean_palette"
+        android:textSize="50sp" />
 </RelativeLayout>

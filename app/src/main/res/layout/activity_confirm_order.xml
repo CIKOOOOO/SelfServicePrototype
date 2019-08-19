@@ -22,7 +22,8 @@
             android:layout_width="170dp"
             android:layout_height="90dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/text_dummy_01"
@@ -30,66 +31,85 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/image_icon_confirm_order"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
             android:text="@string/confirm_order"
             android:textColor="@color/black_color"
-            android:textSize="30sp" />
+            android:textSize="@dimen/text_large_30sp" />
 
-        <LinearLayout
-            android:id="@+id/ll_confirm_order_02"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_above="@id/ll_confirm_order_01"
             android:layout_below="@id/text_dummy_01"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/rectangle_rounded_bombay"
-            android:orientation="vertical">
+            android:fillViewport="true">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_confirm_order"
+            <RelativeLayout
+                android:id="@+id/ll_confirm_order_02"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginTop="20dp"
-                android:overScrollMode="ifContentScrolls"
-                android:scrollbarSize="2dp"
-                android:scrollbars="vertical" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/dashed_line"
-                android:layerType="software" />
-
-            <TextView
-                android:id="@+id/text_price_confirm_order"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
-                android:textSize="18sp" />
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/rectangle_rounded_bombay">
 
-            <TextView
-                android:id="@+id/text_tax_confirm_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:textSize="18sp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_confirm_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/linear_container_text_confirm_order"
+                    android:layout_alignParentTop="true"
+                    android:fadeScrollbars="true"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollbarSize="5dp"
+                    android:scrollbarThumbVertical="@color/raven_palette"
+                    android:scrollbars="vertical" />
 
-            <TextView
-                android:id="@+id/text_total_price_confirm_order"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:textSize="18sp" />
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/linear_container_text_confirm_order"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical">
+
+                    <View
+                        android:id="@+id/view_cross"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/dashed_line"
+                        android:layerType="software" />
+
+                    <TextView
+                        android:id="@+id/text_price_confirm_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_tax_confirm_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_total_price_confirm_order"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/ll_confirm_order_01"
@@ -103,22 +123,28 @@
                 android:id="@+id/btn_cancel_confirm_order"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_red"
+                android:background="@drawable/selection_athens_iron"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
+                android:textColor="@color/cerulean_palette"
                 android:textSize="22sp" />
 
             <Button
                 android:id="@+id/btn_order_confirm_order"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_blue"
-                android:text="@string/order"
+                android:background="@drawable/selection_athens_iron"
+                android:text="Checkout"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
+                android:textColor="@color/cerulean_palette"
                 android:textSize="22sp" />
         </LinearLayout>
     </RelativeLayout>
@@ -127,7 +153,8 @@
         android:id="@+id/relative_loading_confirm_order"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_color">
+        android:background="@color/black_color"
+        android:visibility="gone">
 
         <com.rey.material.widget.ProgressView
             android:layout_width="48dp"

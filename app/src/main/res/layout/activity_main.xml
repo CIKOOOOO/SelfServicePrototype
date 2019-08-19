@@ -9,10 +9,11 @@
     <ImageView
         android:id="@+id/image_main_background"
         android:layout_width="match_parent"
-        android:scaleType="centerCrop"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:scaleType="centerCrop" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linear_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,25 +29,31 @@
             android:layout_marginTop="20dp"
             android:text="FoodPrint"
             android:textColor="@color/white_color"
-            android:textSize="70sp" />
+            android:textSize="@dimen/text_super_large_70sp"
+            android:visibility="gone" />
 
         <com.synnapps.carouselview.CarouselView
             android:id="@+id/carousel_main_activity"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginTop="30dp"
+            android:layout_height="match_parent"
+            android:layout_above="@id/text_touch_continue"
+            android:layout_alignParentTop="true"
             android:animateLayoutChanges="true"
             app:indicatorVisibility="gone"
-            app:slideInterval="3000" />
+            app:slideInterval="5000" />
 
         <TextView
             android:id="@+id/text_touch_continue"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="center"
-            android:layout_marginTop="115dp"
-            android:text="Touch to continue"
+            android:background="@color/endeavour_palette"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Touch to order"
+            android:textAlignment="center"
             android:textColor="@color/white_color"
-            android:textSize="30sp" />
-    </LinearLayout>
+            android:textSize="@dimen/text_large_30sp" />
+    </RelativeLayout>
 </androidx.appcompat.widget.ContentFrameLayout>

@@ -2,6 +2,7 @@ package com.andrew.selfserviceprototype.Activity;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ import com.andrew.selfserviceprototype.Model.MerchantData;
 import com.andrew.selfserviceprototype.Model.OrderType;
 import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.BaseActivity;
+import com.andrew.selfserviceprototype.Utils.Constant;
 import com.andrew.selfserviceprototype.Utils.DecodeBitmap;
 import com.andrew.selfserviceprototype.Utils.PrefConfig;
 import com.squareup.picasso.MemoryPolicy;
@@ -42,11 +45,15 @@ public class OrderTypeActivity extends BaseActivity implements OrderTypeAdapter.
 
     private List<OrderType> orderTypeList;
 
+    private Handler handler;
+    private Runnable runnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_type);
         initVar();
+        setAppIdleTimeout();
     }
 
     private void initVar() {
@@ -133,5 +140,53 @@ public class OrderTypeActivity extends BaseActivity implements OrderTypeAdapter.
             });
             return null;
         }
+    }
+
+
+    private void setAppIdleTimeout() {
+
+        handler = new Handler();
+        runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // Navigate to main activity
+                        finish();
+                    }
+                });
+            }
+        };
+        handler.postDelayed(runnable, Constant.MAX_DURATION_IDLE);
+    }
+
+    //reset timer on user interaction and in onResume
+    public void resetAppIdleTimeout() {
+        handler.removeCallbacks(runnable);
+        handler.postDelayed(runnable, Constant.MAX_DURATION_IDLE);
+    }
+
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        resetAppIdleTimeout();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        resetAppIdleTimeout();
+        super.onUserInteraction();
+    }
+
+    @Override
+    public void onDestroy() {
+        // TODO Auto-generated method stub
+        handler.removeCallbacks(runnable);
+        super.onDestroy();
     }
 }

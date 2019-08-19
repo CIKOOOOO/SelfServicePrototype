@@ -48,11 +48,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
                         android:text="Menu"
                         android:textColor="@color/black_color"
-                        android:textSize="25sp"
+                        android:textSize="@dimen/text_medium_25sp"
                         android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -62,12 +61,11 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="3dp"
                         android:fadeScrollbars="true"
-                        android:overScrollMode="ifContentScrolls"
+                        android:overScrollMode="never"
                         android:scrollbarSize="3dp"
                         android:scrollbarThumbVertical="@android:color/darker_gray"
                         android:scrollbars="vertical" />
                 </LinearLayout>
-
             </FrameLayout>
 
             <LinearLayout
@@ -86,13 +84,14 @@
                     android:layout_marginTop="5dp"
                     android:text="My Order"
                     android:textColor="@color/black_color"
-                    android:textSize="25sp"
+                    android:textSize="@dimen/text_medium_25sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_my_order"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -101,44 +100,67 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/ll_order_04"
+            android:layout_marginTop="5dp"
             android:fontFamily="sans-serif"
             android:paddingStart="5dp"
             android:paddingTop="4dp"
             android:paddingEnd="5dp"
             android:paddingBottom="4dp"
             android:textColor="@color/black_color"
-            android:textSize="17sp"
+            android:textSize="@dimen/text_small_17sp"
             android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/ll_order_04"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
-            android:weightSum="2">
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/btn_cancel_order"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_red"
+                android:background="@drawable/selection_athens_iron"
+                android:elevation="2dp"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="22sp" />
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_small_17sp" />
+
+            <Button
+                android:id="@+id/btn_order_again_order"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selection_athens_iron"
+                android:elevation="2dp"
+                android:text="@string/order_again"
+                android:textAllCaps="false"
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_small_17sp" />
 
             <Button
                 android:id="@+id/btn_continue_order"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_blue"
+                android:background="@drawable/rectangle_rounded_athens"
+                android:elevation="2dp"
                 android:text="@string/continues"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
-                android:textSize="22sp" />
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_small_17sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -151,7 +173,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="450dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
@@ -176,8 +198,9 @@
                 android:layout_below="@id/image_order"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
+                android:textAlignment="center"
                 android:textColor="@color/black_color"
-                android:textSize="20sp" />
+                android:textSize="@dimen/text_medium_25sp" />
 
             <LinearLayout
                 android:id="@+id/ll_order_03"
@@ -201,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="0"
-                    android:textSize="17sp" />
+                    android:textSize="@dimen/text_small_17sp" />
 
                 <ImageButton
                     android:id="@+id/btn_plus_frame_order"
@@ -218,7 +241,7 @@
                 android:layout_below="@id/ll_order_03"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_super_small_15sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -232,23 +255,29 @@
                     android:id="@+id/btn_cancel_frame_order"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/selection_alizarin_softred"
+                    android:background="@drawable/selection_athens_iron"
                     android:text="@string/cancel"
                     android:textAllCaps="false"
-                    android:textColor="@color/white_color"
-                    android:textSize="17sp" />
+                    android:textColor="@color/cerulean_palette"
+                    android:textSize="@dimen/text_small_17sp" />
 
                 <Button
                     android:id="@+id/btn_add_frame_order"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/selection_downy_seagull"
+                    android:background="@drawable/selection_athens_iron"
                     android:text="@string/add"
                     android:textAllCaps="false"
-                    android:textColor="@color/white_color"
-                    android:textSize="17sp" />
+                    android:textColor="@color/cerulean_palette"
+                    android:textSize="@dimen/text_small_17sp" />
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>
@@ -257,8 +286,8 @@
         android:id="@+id/relative_order_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@color/black_color">
+        android:background="@color/black_color"
+        android:visibility="gone">
 
         <com.rey.material.widget.ProgressView
             android:layout_width="48dp"

@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
             android:overScrollMode="never" />
     </LinearLayout>
@@ -76,7 +75,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:text="Input Amount \n IDR 244.200"
                 android:textAlignment="center"
                 android:textColor="@color/black_color"
                 android:textSize="20sp" />
@@ -93,6 +91,57 @@
             android:textAlignment="center"
             android:textColor="@color/white_color"
             android:textSize="30sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_rate_payment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_color"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_title_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:maxLines="2"
+            android:text="Please rate the quality of our services"
+            android:textAlignment="center"
+            android:textColor="@color/blue_palette"
+            android:textSize="@dimen/text_medium_25sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_rating_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_title_payment"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/text_rate_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_rating_payment"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/text_small_17sp" />
+
+        <Button
+            android:id="@+id/btn_submit_rate_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_rate_payment"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selection_athens_iron"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="@color/cerulean_palette"
+            android:textSize="@dimen/text_small_17sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -152,11 +201,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/selection_red"
+                android:background="@drawable/selection_athens_iron"
                 android:text="No"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
+                android:textColor="@color/cerulean_palette"
                 android:textSize="25sp" />
 
             <Button
@@ -164,11 +213,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/selection_blue"
+                android:background="@drawable/selection_athens_iron"
                 android:text="Yes"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
+                android:textColor="@color/cerulean_palette"
                 android:textSize="25sp" />
         </LinearLayout>
     </RelativeLayout>
