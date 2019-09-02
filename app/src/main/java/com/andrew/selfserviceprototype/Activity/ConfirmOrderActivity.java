@@ -52,13 +52,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ConfirmOrderActivity extends BaseActivity implements View.OnClickListener
-        , PaymentAdapter.choosingPayment, RatingAdapter.starOnClick, ConfirmOrderAdapter.addDeleteOrder, ConfirmOrderAdapter.menuOnDelete {
+        , PaymentAdapter.choosingPayment, RatingAdapter.starOnClick, ConfirmOrderAdapter.addDeleteOrder
+        , ConfirmOrderAdapter.menuOnDelete {
     public static final String CONFIRM_GETTING_MERCHANT_DATA = "confirm_data";
     public static final String CONFIRM_GETTING_QUANTITY_LIST = "quantity_list";
     public static final String CONFIRM_GETTING_ORDER_LIST = "order_list";
 
     private static final String TAG = ConfirmOrderActivity.class.getSimpleName();
-
     private static final int RESULT = 12;
 
     private TextView text_price, text_total_price, text_tax, text_payment_type, text_rate, text_title_discount, text_discount;
