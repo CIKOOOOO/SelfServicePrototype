@@ -11,8 +11,18 @@ public class Utils {
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         return formatter.format(totalPrice);
     }
+
+    public static String priceFormat(double totalPrice) {
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        return formatter.format(totalPrice);
+    }
+
     public static String getTime(String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(new Date());
+    }
+
+    public static String escapeStringEnter(String description) {
+        return description.replace("\\n", "\r\n");
     }
 }

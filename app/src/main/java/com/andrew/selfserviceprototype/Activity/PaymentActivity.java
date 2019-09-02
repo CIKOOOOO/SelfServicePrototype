@@ -8,6 +8,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.media.Rating;
 import android.os.AsyncTask;
@@ -15,12 +17,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andrew.selfserviceprototype.Adapter.BadRateAdapter;
 import com.andrew.selfserviceprototype.Adapter.PaymentAdapter;
 import com.andrew.selfserviceprototype.Adapter.RatingAdapter;
 import com.andrew.selfserviceprototype.Api.ApiClient;
@@ -45,7 +51,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PaymentActivity extends BaseActivity implements View.OnClickListener, PaymentAdapter.choosingPayment, RatingDialogListener, RatingAdapter.starOnClick {
+public class PaymentActivity extends BaseActivity implements View.OnClickListener
+        , PaymentAdapter.choosingPayment, RatingDialogListener, RatingAdapter.starOnClick {
     public static final String PAYMENT_GETTING_DATA = "payment_data";
     public static final String PAYMENT_GETTING_DATA_LIST = "payment_data_list";
 
@@ -56,16 +63,18 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout relative_payment, relative_payment_success, relative_repeat_order, relative_rate;
     private ImageView image_qr;
     private TextView text_payment_type, text_rate;
+    private LinearLayout linear_improve;
 
     private Transaction transaction;
     private PaymentAdapter paymentAdapter;
-    private List<Transaction.TransactionDetail> transactionDetailList;
-    private List<Payment> paymentList;
     private ApiInterface apiInterface;
     private PrefConfig prefConfig;
     private RatingAdapter ratingAdapter;
+    private BadRateAdapter badRateAdapter;
 
-    private List<String> rateList;
+    private List<String> rateList, badRateList;
+    private List<Transaction.TransactionDetail> transactionDetailList;
+    private List<Payment> paymentList;
     private String TID;
     private int rate;
 
@@ -89,6 +98,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         relative_repeat_order = findViewById(R.id.relative_repeat_order);
         text_rate = findViewById(R.id.text_rate_payment);
         relative_rate = findViewById(R.id.relative_rate_payment);
+        linear_improve = findViewById(R.id.ll_box_bad_rate_payment);
 
         RelativeLayout relative_content_payment = findViewById(R.id.relative_payment_01);
         ImageButton arrow_back = findViewById(R.id.image_button_back_payment);
@@ -100,9 +110,11 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         rateList = new ArrayList<>(Constant.getRatingList());
         paymentList = new ArrayList<>();
         transactionDetailList = new ArrayList<>();
+        badRateList = new ArrayList<>(Constant.getBadRateList());
 
         paymentAdapter = new PaymentAdapter(this, paymentList, this);
         ratingAdapter = new RatingAdapter(this, rateList, this);
+        badRateAdapter = new BadRateAdapter(badRateList, this);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(paymentAdapter);
@@ -206,7 +218,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     private void sendData(final int pos) {
         Call<Transaction> call = apiInterface.sendTransaction("transaction", transaction.getTransactionId()
                 , transaction.getTaxAmount(), Utils.getTime("dd/MM/yyyy")
-                , Utils.getTime("HH:mm"), paymentList.get(pos).getPaymentId(), prefConfig.getOrderTypeId(), transaction.getOrderStatus());
+                , Utils.getTime("HH:mm"), paymentList.get(pos).getPaymentId(), StaticData.ORDER_TYPE.getOrderTypeId(), transaction.getOrderStatus());
 
         call.enqueue(new Callback<Transaction>() {
             @Override
@@ -283,9 +295,41 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void clickRate(int pos) {
+        linear_improve.clearAnimation();
         ratingAdapter.setLastPosition(pos);
         ratingAdapter.notifyDataSetChanged();
         text_rate.setText(rateList.get(pos));
+        if (pos <= 3) {
+            if (linear_improve.getVisibility() == View.GONE) {
+                linear_improve.setVisibility(View.VISIBLE);
+                linear_improve.setAlpha(0.0f);
+                linear_improve.animate()
+                        .alpha(1.0f)
+                        .setDuration(1000)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                linear_improve.setVisibility(View.VISIBLE);
+                            }
+                        });
+
+                RecyclerView recycler_bad_rate = findViewById(R.id.recycler_bad_rate_payment);
+                recycler_bad_rate.setLayoutManager(new GridLayoutManager(this, 3));
+                recycler_bad_rate.setAdapter(badRateAdapter);
+            }
+        } else {
+            linear_improve.animate()
+                    .alpha(0.0f)
+                    .setDuration(1000)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            linear_improve.setVisibility(View.GONE);
+                        }
+                    });
+        }
         rate = ++pos;
     }
 

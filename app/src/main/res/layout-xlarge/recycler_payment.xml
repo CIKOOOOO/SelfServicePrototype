@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
-    android:layout_marginStart="50dp"
-    android:layout_marginTop="40dp"
-    android:layout_marginEnd="50dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/recycler_type_payment"
-        android:layout_width="500dp"
+    <ImageView
+        android:id="@+id/recycler_image_payment"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/selection_athens_iron"
-        android:elevation="2dp"
-        android:paddingTop="25dp"
-        android:paddingBottom="25dp"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/cerulean_palette"
-        android:textSize="50sp" />
-</RelativeLayout>
+        android:layout_gravity="center" />
+
+    <TextView
+        android:id="@+id/recycler_text_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/text_large_30sp" />
+</LinearLayout>

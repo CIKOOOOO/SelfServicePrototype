@@ -2,16 +2,22 @@ package com.andrew.selfserviceprototype.Adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andrew.selfserviceprototype.Model.MerchantData;
 import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.R;
+import com.andrew.selfserviceprototype.Utils.Constant;
 import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.andrew.selfserviceprototype.Utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -25,15 +31,29 @@ public class ConfirmOrderAdapter extends RecyclerView.Adapter<ConfirmOrderAdapte
     private List<Integer> quantityList;
     private Typeface typeface, titleTypeface;
 
+    public interface addDeleteOrder {
+        void onAddDeleteOrder(int pos, int quantity, boolean isDelete);
+    }
+
+    public interface menuOnDelete {
+        void menuOnDeletes(int pos);
+    }
+
+    private menuOnDelete menuOnDelete;
+    private addDeleteOrder addDeleteOrder;
+
     public void setList(List<Product> productList, List<Integer> quantityList) {
         this.productList = productList;
         this.quantityList = quantityList;
     }
 
-    public ConfirmOrderAdapter(Context mContext, List<Product> productList, List<Integer> quantityList) {
+    public ConfirmOrderAdapter(Context mContext, List<Product> productList, List<Integer> quantityList
+            , addDeleteOrder addDeleteOrder, menuOnDelete menuOnDelete) {
         this.mContext = mContext;
         this.productList = productList;
         this.quantityList = quantityList;
+        this.addDeleteOrder = addDeleteOrder;
+        this.menuOnDelete = menuOnDelete;
         typeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/arial.ttf");
         titleTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/axure_handwriting.ttf");
     }
@@ -59,24 +79,110 @@ public class ConfirmOrderAdapter extends RecyclerView.Adapter<ConfirmOrderAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, int position) {
-        int pos = holder.getAdapterPosition();
+    public void onBindViewHolder(@NonNull final Holder holder, int position) {
+        final int pos = position;
         Product product = productList.get(pos);
-        if (getItemViewType(pos) == 0) {
+
+        if (productList.size() == 1) {
+            menuOnDelete.menuOnDeletes(pos);
+        } else if (getItemViewType(pos) == 1) {
+            if (pos == productList.size() - 1) {
+                menuOnDelete.menuOnDeletes(pos);
+            }
+//            else if (getItemViewType(position + 1) == 1) {
+//                menuOnDelete.menuOnDeletes(position);
+//            }
+            else {
+                for (MerchantData merchantData : StaticData.MERCHANT_LIST) {
+                    if (merchantData.getMerchantId().equals(product.getMerchantId())) {
+//                        holder.merchant_name.setText(merchantData.getMerchantName());
+                        Picasso.get()
+                                .load(Constant.URL + merchantData.getMerchantIcon())
+                                .into(holder.img);
+//                        holder.merchant_name.setTypeface(titleTypeface);
+                        break;
+                    }
+                }
+            }
+        } else {
 //            holder.quantity.setText(quantityList.get(pos) + "x");
             holder.name.setText("(" + quantityList.get(pos) + "x) " + product.getProductName());
             holder.price.setText("IDR " + Utils.priceFormat(product.getProductPrice() * quantityList.get(pos)) + " ,-");
-            holder.name.setTypeface(typeface);
+            holder.quantity.setText("" + quantityList.get(pos));
+
             holder.price.setTypeface(typeface);
-//            holder.quantity.setTypeface(typeface);
-        } else {
-            for (MerchantData merchantData : StaticData.MERCHANT_LIST) {
-                if (merchantData.getMerchantId().equals(product.getMerchantId())) {
-                    holder.merchant_name.setText(merchantData.getMerchantName());
-                    holder.merchant_name.setTypeface(titleTypeface);
-                    break;
-                }
+            holder.name.setTypeface(typeface);
+
+            if (product.getDiscount() > 0) {
+//                Utils.priceFormat(product.getProductPrice() - ((product.getProductPrice()) * product.getDiscount()));
+                holder.discount.setText(" - IDR " + Utils.priceFormat((product.getProductPrice()) * product.getDiscount()) + " ,-");
+                holder.discount.setVisibility(View.VISIBLE);
+            } else {
+                holder.discount.setVisibility(View.GONE);
             }
+
+            if (product.isAdvertisement()) {
+                holder.img_btn_minus.setEnabled(false);
+                holder.img_btn_plus.setEnabled(false);
+                holder.img_btn_minus.setBackground(mContext.getDrawable(R.drawable.ic_minus_bombay));
+                holder.img_btn_plus.setBackground(mContext.getDrawable(R.drawable.ic_plus_bombay));
+                holder.remove.setVisibility(View.VISIBLE);
+            } else {
+                holder.img_btn_minus.setEnabled(true);
+                holder.img_btn_plus.setEnabled(true);
+                holder.img_btn_minus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_minus));
+                holder.img_btn_plus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_plus));
+                holder.remove.setVisibility(View.GONE);
+                if (quantityList.get(pos) == 0) {
+                    holder.remove.setVisibility(View.VISIBLE);
+                } else holder.remove.setVisibility(View.GONE);
+            }
+
+            if (pos + 1 <= productList.size() - 1) {
+                if (getItemViewType(pos + 1) == 1) {
+                    holder.line.setVisibility(View.GONE);
+                } else holder.line.setVisibility(View.VISIBLE);
+            } else {
+                holder.line.setVisibility(View.GONE);
+            }
+
+            holder.img_btn_plus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int quantity = quantityList.get(pos) + 1;
+                    quantityList.set(pos, quantity);
+                    addDeleteOrder.onAddDeleteOrder(pos, quantity, false);
+                    notifyDataSetChanged();
+                }
+            });
+
+            holder.img_btn_minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int quantity = quantityList.get(pos) - 1;
+                    if (quantity >= 0) {
+                        quantityList.set(pos, quantity);
+                        addDeleteOrder.onAddDeleteOrder(pos, quantity, true);
+                        notifyDataSetChanged();
+                    }
+                }
+            });
+
+            holder.remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    menuOnDelete.menuOnDeletes(pos);
+//                    if (pos + 1 <= productList.size() - 1) {
+//                        if (getItemViewType(pos + 1) == 1 && getItemViewType(pos - 1) == 1) {
+////                            quantityList.remove(pos - 1);
+////                            productList.remove(pos - 1);
+//                            menuOnDelete.menuOnDeletes(pos - 1);
+//                        }
+//                    }
+                }
+            });
+
+//            holder.quantity.setTypeface(typeface);
         }
     }
 
@@ -86,14 +192,24 @@ public class ConfirmOrderAdapter extends RecyclerView.Adapter<ConfirmOrderAdapte
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        private TextView quantity, name, price, merchant_name;
+        private TextView quantity, name, price, merchant_name, discount;
+        private ImageView img;
+        private View line;
+        private ImageButton img_btn_minus, img_btn_plus;
+        private Button remove;
 
-        public Holder(@NonNull View itemView) {
+        Holder(@NonNull View itemView) {
             super(itemView);
-            quantity = itemView.findViewById(R.id.recycler_quantity_confirm_order);
+            quantity = itemView.findViewById(R.id.recycler_text_quantity_confirm_order);
             name = itemView.findViewById(R.id.recycler_product_name_confirm_order);
             price = itemView.findViewById(R.id.recycler_price_confirm_order);
             merchant_name = itemView.findViewById(R.id.recycler_text_merchant_name_confirm_order);
+            img = itemView.findViewById(R.id.recycler_image_confirm_order);
+            discount = itemView.findViewById(R.id.recycler_discount_confirm_order);
+            line = itemView.findViewById(R.id.recycler_line_confirm_order);
+            remove = itemView.findViewById(R.id.recycler_btn_remove_confirm_order);
+            img_btn_minus = itemView.findViewById(R.id.recycler_btn_minus_confirm_order);
+            img_btn_plus = itemView.findViewById(R.id.recycler_btn_plus_confirm_order);
         }
     }
 }

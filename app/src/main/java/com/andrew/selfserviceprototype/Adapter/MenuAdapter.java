@@ -62,7 +62,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.Holder> {
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .networkPolicy(NetworkPolicy.NO_CACHE)
                 .into(holder.imageView);
-        holder.price.setText("IDR " + Utils.priceFormat(product.getProductPrice()));
+        holder.price.setText("IDR " + Utils.priceFormat(product.getProductPrice()) + ",-");
         holder.title.setText(product.getProductName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

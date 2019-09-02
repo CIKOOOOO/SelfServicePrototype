@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.andrew.selfserviceprototype.Api.ApiClient;
 import com.andrew.selfserviceprototype.Api.ApiInterface;
 import com.andrew.selfserviceprototype.Model.MerchantData;
+import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
@@ -35,6 +36,7 @@ import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
@@ -57,19 +59,35 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void initVar() {
         ApiInterface apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/sniglet_reguler.ttf");
         Typeface typeface2 = Typeface.createFromAsset(getAssets(), "fonts/axure_handwriting.ttf");
 
         RelativeLayout linearLayout = findViewById(R.id.linear_main);
-        TextView title = findViewById(R.id.text_title_main);
         TextView touch_to_continue = findViewById(R.id.text_touch_continue);
-        ImageView background = findViewById(R.id.image_main_background);
 
         carouselView = findViewById(R.id.carousel_main_activity);
 
         merchantData = new ArrayList<>();
 
-        Call<MerchantData> call = apiInterface.getMerchantData("ads_promo");
+        Call<MerchantData> call = apiInterface.getMerchantData("get_merchant_data");
+        Call<Product> ads_product = apiInterface.getAdsProduct("get_ads_product");
+
+        /*
+         * To get all data that is advertise by merchant
+         * */
+        ads_product.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.body().getResponse().equals("ok")) {
+                    StaticData.PRODUCT_ADS_LIST.clear();
+                    StaticData.PRODUCT_ADS_LIST.addAll(response.body().getProductList());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+
+            }
+        });
 
         call.enqueue(new Callback<MerchantData>() {
             @Override
@@ -78,7 +96,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     merchantData.addAll(response.body().getMerchantDataList());
                     /*
                      * We need to clear this merchant static list, because it will causes redundant data
-                     * so we clear, so database can add the new one
+                     * so we clear and database can add the new one
                      * */
                     StaticData.MERCHANT_LIST.clear();
                     StaticData.MERCHANT_LIST.addAll(response.body().getMerchantDataList());
@@ -97,10 +115,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
 //        DecodeBitmap.setScaledImageView(background, R.drawable.asset_background, this);
 
-        title.setTypeface(typeface);
         touch_to_continue.setTypeface(typeface2);
 //        touch_to_continue.startAnimation(getAnimation());
         linearLayout.setOnClickListener(this);
+        carouselView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                if (merchantData.size() > 0) {
+                    Intent intent = new Intent(MainActivity.this, OrderTypeActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private Animation getAnimation() {

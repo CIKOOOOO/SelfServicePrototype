@@ -1,14 +1,15 @@
 <resources>
-    <string name="app_name">SelfServicePrototype</string>
+    <string name="app_name">KiosK</string>
     <string name="cancel">Cancel</string>
     <string name="continues">Continue</string>
-    <string name="order_again">Buy More</string>
+    <string name="back">Back</string>
+    <string name="additional_order">Additional Order</string>
     <string name="order">Order</string>
     <string name="add">Add</string>
-    <string name="confirm_order">Confirm Your orders</string>
+    <string name="check_order">Check your orders</string>
     <string name="order_qr_reader">Please put your device in front of QR Reader</string>
+    <string name="text_thankyou"><b>Thankyou for order</b>\nYour order is being processed by Merchant.\n So sit tight and you will get your order in no time!</string>
     <string name="pref_file" />
     <string name="pref_order_type_id" />
     <string name="pref_order_type" />
-
 </resources>

@@ -20,6 +20,9 @@ public interface ApiInterface {
     Call<MerchantData> getMerchantData(@Query("response") String response);
 
     @GET("getting_data.php")
+    Call<Product> getAdsProduct(@Query("response") String response);
+
+    @GET("getting_data.php")
     Call<Product> getMenu(@Query("response") String response, @Query("merchant_id") String merchantId);
 
     @GET("getting_data.php")
@@ -31,7 +34,7 @@ public interface ApiInterface {
     @POST("transaction.php")
     @FormUrlEncoded
     Call<Transaction> sendTransaction(@Field("response") String response, @Field("tid") String tid
-            , @Field("tax") long tax, @Field("transaction_date") String transaction_date
+            , @Field("tax") double tax, @Field("transaction_date") String transaction_date
             , @Field("transaction_time") String transaction_time, @Field("payment_id") String payment_id
             , @Field("order_type_id") String order_type_id, @Field("order_status") String order_status);
 
@@ -39,7 +42,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<Transaction.TransactionDetail> sendTransactionDetail(@Field("response") String response
             , @Field("tid") String tid,@Field("mid") String mid, @Field("pid") String pid
-            , @Field("unit_price") long unit_price, @Field("quantity") int quantity);
+            , @Field("unit_price") double unit_price, @Field("quantity") int quantity);
 
     @POST("transaction.php")
     @FormUrlEncoded

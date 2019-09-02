@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.ContentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,15 +32,35 @@
             android:layout_below="@id/image_icon_confirm_order"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="@string/confirm_order"
+            android:text="@string/check_order"
             android:textColor="@color/black_color"
             android:textSize="@dimen/text_large_30sp" />
+
+        <ImageView
+            android:id="@+id/image_icon_order_type"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/text_dummy_01"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/text_order_type_confirm_order"
+            android:background="@drawable/oval_endeavour" />
+
+        <TextView
+            android:id="@+id/text_order_type_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_dummy_01"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black_color"
+            android:textSize="@dimen/text_small_17sp" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/ll_confirm_order_01"
-            android:layout_below="@id/text_dummy_01"
+            android:layout_below="@id/text_order_type_confirm_order"
             android:fillViewport="true">
 
             <RelativeLayout
@@ -73,40 +93,127 @@
                     android:orientation="vertical">
 
                     <View
-                        android:id="@+id/view_cross"
+                        android:id="@+id/view_cross_0"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/dashed_line"
                         android:layerType="software" />
 
-                    <TextView
-                        android:id="@+id/text_price_confirm_order"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:textSize="18sp" />
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
 
-                    <TextView
-                        android:id="@+id/text_tax_confirm_order"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:textSize="18sp" />
+                        <TextView
+                            android:id="@+id/text_payment_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="Payment with QRIS"
+                            android:textSize="@dimen/text_small_17sp" />
 
-                    <TextView
-                        android:id="@+id/text_total_price_confirm_order"
+                        <Button
+                            android:id="@+id/btn_change_payment_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/selection_athens_iron"
+                            android:paddingTop="-5dp"
+                            android:paddingBottom="-5dp"
+                            android:text="Change"
+                            android:textAllCaps="false"
+                            android:textColor="@color/cerulean_palette"
+                            android:textSize="@dimen/text_small_17sp" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/view_cross"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@drawable/dashed_line"
+                        android:layerType="software" />
+
+                    <GridLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:textSize="18sp" />
+                        android:layout_marginEnd="10dp"
+                        android:columnCount="2">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:text="Sub Total"
+                            android:textSize="@dimen/text_small_17sp" />
+
+                        <TextView
+                            android:id="@+id/text_price_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:textSize="@dimen/text_small_17sp" />
+
+                        <TextView
+                            android:id="@+id/text_discount_title_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:text="Discount"
+                            android:textSize="@dimen/text_small_17sp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/text_discount_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:textSize="@dimen/text_small_17sp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:text="Tax 10%"
+                            android:textSize="@dimen/text_small_17sp" />
+
+                        <TextView
+                            android:id="@+id/text_tax_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:textSize="@dimen/text_small_17sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:text="Total Price"
+                            android:textSize="@dimen/text_small_17sp" />
+
+                        <TextView
+                            android:id="@+id/text_total_price_confirm_order"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:textSize="@dimen/text_small_17sp" />
+                    </GridLayout>
                 </LinearLayout>
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
@@ -128,7 +235,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/selection_athens_iron"
-                android:text="@string/cancel"
+                android:text="@string/back"
                 android:textAllCaps="false"
                 android:textColor="@color/cerulean_palette"
                 android:textSize="22sp" />
@@ -150,6 +257,174 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relative_payment_confirm_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_color"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/relative_payment_confirm_order_01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rectangle_rounded_blue">
+
+            <ImageView
+                android:id="@+id/image_qr_payment_confirm_order"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:scaleType="fitXY"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/text_payment_type_confirm_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image_qr_payment_confirm_order"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:maxLines="2"
+                android:textAlignment="center"
+                android:textColor="@color/black_color"
+                android:textSize="20sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_waiting_payment_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relative_payment_confirm_order_01"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:text="Waiting . . . "
+            android:textAlignment="center"
+            android:textColor="@color/black_color"
+            android:textSize="30sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_payment_success"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_color"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image_success"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/ic_payment_success" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_success"
+            android:layout_centerHorizontal="true"
+            android:text="Payment Success! \n Please take your receipt"
+            android:textAlignment="center"
+            android:textColor="@color/black_color"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_rate_confirm_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_color"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/text_title_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:maxLines="2"
+            android:text="Please rate the quality of our services"
+            android:textAlignment="center"
+            android:textColor="@color/blue_palette"
+            android:textSize="@dimen/text_medium_25sp" />
+
+        <TextView
+            android:id="@+id/text_rate_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_title_confirm_order"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/text_small_17sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_rating_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_rate_confirm_order"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_box_bad_rate_confirm_order"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_rating_confirm_order"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rectangle_rounded_blue"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="What can we improve?"
+                android:textColor="@color/blue_palette"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_bad_rate_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_submit_rate_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_box_bad_rate_confirm_order"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/selection_athens_iron"
+            android:text="Submit"
+            android:textAllCaps="false"
+            android:textColor="@color/cerulean_palette"
+            android:textSize="@dimen/text_small_17sp" />
+
+        <TextView
+            android:id="@+id/text_skip_rate_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_submit_rate_confirm_order"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="SKIP"
+            android:textColor="@color/iron_palette" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/relative_loading_confirm_order"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -165,4 +440,6 @@
             app:pv_progressMode="indeterminate"
             app:pv_progressStyle="@style/CircularProgress" />
     </RelativeLayout>
-</androidx.appcompat.widget.ContentFrameLayout>
+
+    <include layout="@layout/bottom_sheet_payment_type" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

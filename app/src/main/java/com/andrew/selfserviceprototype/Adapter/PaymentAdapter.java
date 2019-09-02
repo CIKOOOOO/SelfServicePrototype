@@ -5,10 +5,13 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.andrew.selfserviceprototype.Model.Payment;
 import com.andrew.selfserviceprototype.R;
+import com.andrew.selfserviceprototype.Utils.Constant;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,12 +23,21 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.Holder> 
     private Context context;
     private List<Payment> paymentList;
     private Typeface typeface;
+    private int lastPosition;
 
     public interface choosingPayment {
         void isChoosingPayment(int pos);
     }
 
     private choosingPayment choosingPayment;
+
+    public void setLastPosition(int lastPosition) {
+        this.lastPosition = lastPosition;
+    }
+
+    public int getLastPosition() {
+        return lastPosition;
+    }
 
     public void setPaymentList(List<Payment> paymentList) {
         this.paymentList = paymentList;
@@ -36,6 +48,7 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.Holder> 
         this.paymentList = paymentList;
         this.choosingPayment = choosingPayment;
         typeface = Typeface.createFromAsset(context.getAssets(), "fonts/clarendon_bt.ttf");
+        lastPosition = -1;
     }
 
     @NonNull
@@ -46,14 +59,29 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.Holder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Holder holder, final int position) {
-        Payment payment = paymentList.get(position);
-        holder.button.setText(payment.getPaymentType());
-        holder.button.setTypeface(typeface);
-        holder.button.setOnClickListener(new View.OnClickListener() {
+    public void onBindViewHolder(@NonNull Holder holder, int position) {
+        final int pos = holder.getAdapterPosition();
+        Payment payment = paymentList.get(pos);
+
+        Picasso.get()
+                .load(Constant.PAYMENT_URL + payment.getPaymentIcon())
+                .into(holder.image);
+
+        if (pos == lastPosition) {
+            holder.image.setBackground(context.getDrawable(R.drawable.oval_endeavour));
+        } else {
+            holder.image.setBackground(context.getDrawable(R.drawable.oval_stroke_endeavour));
+        }
+
+        holder.text.setText(payment.getPaymentType());
+        holder.text.setTypeface(typeface);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                choosingPayment.isChoosingPayment(position);
+                lastPosition = pos;
+                choosingPayment.isChoosingPayment(pos);
+                notifyDataSetChanged();
             }
         });
     }
@@ -64,11 +92,13 @@ public class PaymentAdapter extends RecyclerView.Adapter<PaymentAdapter.Holder> 
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        private Button button;
+        private ImageView image;
+        private TextView text;
 
         Holder(@NonNull View itemView) {
             super(itemView);
-            button = itemView.findViewById(R.id.recycler_type_payment);
+            image = itemView.findViewById(R.id.recycler_image_payment);
+            text = itemView.findViewById(R.id.recycler_text_payment);
         }
     }
 }

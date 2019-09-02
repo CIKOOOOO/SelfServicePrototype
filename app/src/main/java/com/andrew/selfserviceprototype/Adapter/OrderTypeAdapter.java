@@ -6,9 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.andrew.selfserviceprototype.Model.OrderType;
 import com.andrew.selfserviceprototype.R;
+import com.andrew.selfserviceprototype.Utils.Constant;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -20,12 +24,17 @@ public class OrderTypeAdapter extends RecyclerView.Adapter<OrderTypeAdapter.Hold
     private Context context;
     private List<OrderType> orderTypeList;
     private Typeface typeface;
+    private int lastPosition;
 
     public interface onOrderClick {
         void onClick(int pos);
     }
 
     private onOrderClick onOrderClick;
+
+    public int getLastPosition() {
+        return lastPosition;
+    }
 
     public void setOrderTypeList(List<OrderType> orderTypeList) {
         this.orderTypeList = orderTypeList;
@@ -36,23 +45,38 @@ public class OrderTypeAdapter extends RecyclerView.Adapter<OrderTypeAdapter.Hold
         this.orderTypeList = orderTypeList;
         this.onOrderClick = onOrderClick;
         typeface = Typeface.createFromAsset(context.getAssets(), "fonts/clarendon_bt.ttf");
+        lastPosition = -1;
     }
 
     @NonNull
     @Override
     public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.recycler_payment, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.recycler_order_type, parent, false);
         return new Holder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, final int position) {
-        holder.button.setText(orderTypeList.get(position).getOrderTypeName());
-        holder.button.setTypeface(typeface);
-        holder.button.setOnClickListener(new View.OnClickListener() {
+        final int pos = holder.getAdapterPosition();
+        OrderType orderType = orderTypeList.get(pos);
+        Picasso.get()
+                .load(Constant.ORDER_TYPE_URL + orderType.getOrderTypeIcon())
+                .into(holder.image);
+
+        if (pos == lastPosition) {
+            holder.image.setBackground(context.getDrawable(R.drawable.oval_endeavour));
+        } else {
+            holder.image.setBackground(context.getDrawable(R.drawable.oval_stroke_endeavour));
+        }
+
+        holder.text.setText(orderType.getOrderTypeName());
+        holder.text.setTypeface(typeface);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onOrderClick.onClick(position);
+                lastPosition = pos;
+                onOrderClick.onClick(pos);
+                notifyDataSetChanged();
             }
         });
     }
@@ -63,11 +87,13 @@ public class OrderTypeAdapter extends RecyclerView.Adapter<OrderTypeAdapter.Hold
     }
 
     class Holder extends RecyclerView.ViewHolder {
-        private Button button;
+        private ImageView image;
+        private TextView text;
 
         Holder(@NonNull View itemView) {
             super(itemView);
-            button = itemView.findViewById(R.id.recycler_type_payment);
+            image = itemView.findViewById(R.id.recycler_image_order_type);
+            text = itemView.findViewById(R.id.recycler_text_order_type);
         }
     }
 }

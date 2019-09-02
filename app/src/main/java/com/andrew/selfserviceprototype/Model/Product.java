@@ -24,7 +24,7 @@ public class Product implements Parcelable {
     private String productName;
 
     @SerializedName("product_price")
-    private long productPrice;
+    private double productPrice;
 
     @SerializedName("product_desc")
     private String productDesc;
@@ -32,13 +32,33 @@ public class Product implements Parcelable {
     @SerializedName("product_img")
     private String productImage;
 
-    public Product(String productId, String merchantId, String productName, long productPrice, String productDesc, String productImage) {
+    @SerializedName("is_advertisement")
+    private boolean isAdvertisement;
+
+    @SerializedName("term_condition")
+    private String termCondition;
+
+    @SerializedName("date_from")
+    private String dateFrom;
+
+    @SerializedName("date_to")
+    private String dateTo;
+
+    @SerializedName("discount")
+    private double discount;
+
+    public Product(String productId, String merchantId, String productName, long productPrice, String productDesc, String productImage, boolean isAdvertisement, String termCondition, String dateFrom, String dateTo, double discount) {
         this.productId = productId;
         this.merchantId = merchantId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productDesc = productDesc;
         this.productImage = productImage;
+        this.isAdvertisement = isAdvertisement;
+        this.termCondition = termCondition;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+        this.discount = discount;
     }
 
     protected Product(Parcel in) {
@@ -50,6 +70,11 @@ public class Product implements Parcelable {
         productPrice = in.readLong();
         productDesc = in.readString();
         productImage = in.readString();
+        isAdvertisement = in.readByte() != 0;
+        termCondition = in.readString();
+        dateFrom = in.readString();
+        dateTo = in.readString();
+        discount = in.readInt();
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -84,7 +109,7 @@ public class Product implements Parcelable {
         return productName;
     }
 
-    public long getProductPrice() {
+    public double getProductPrice() {
         return productPrice;
     }
 
@@ -96,6 +121,25 @@ public class Product implements Parcelable {
         return productImage;
     }
 
+    public boolean isAdvertisement() {
+        return isAdvertisement;
+    }
+
+    public String getTermCondition() {
+        return termCondition;
+    }
+
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
 
     @Override
     public int describeContents() {
@@ -109,8 +153,13 @@ public class Product implements Parcelable {
         parcel.writeString(productId);
         parcel.writeString(merchantId);
         parcel.writeString(productName);
-        parcel.writeLong(productPrice);
+        parcel.writeDouble(productPrice);
         parcel.writeString(productDesc);
         parcel.writeString(productImage);
+        parcel.writeByte((byte) (isAdvertisement ? 1 : 0));
+        parcel.writeString(termCondition);
+        parcel.writeString(dateFrom);
+        parcel.writeString(dateTo);
+        parcel.writeDouble(discount);
     }
 }

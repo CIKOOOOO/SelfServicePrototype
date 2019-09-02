@@ -23,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:text="Choose Payment"
             android:textColor="@color/black_color"
-            android:textSize="100sp" />
+            android:textSize="@dimen/text_super_large_70sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_payment"
@@ -140,40 +140,71 @@
             android:text="Please rate the quality of our services"
             android:textAlignment="center"
             android:textColor="@color/blue_palette"
-            android:textSize="70sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_rating_payment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_title_payment"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp" />
+            android:textSize="@dimen/text_super_large_70sp" />
 
         <TextView
             android:id="@+id/text_rate_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recycler_rating_payment"
+            android:layout_below="@id/text_title_payment"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:textSize="70sp" />
+            android:layout_marginTop="20dp"
+            android:textSize="@dimen/text_large_45sp" />
 
-        <Button
-            android:id="@+id/btn_submit_rate_payment"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_rating_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_rate_payment"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_box_bad_rate_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_rating_payment"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="50dp"
-            android:background="@drawable/selection_blue"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rectangle_rounded_blue"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="What can we improve?"
+                android:textColor="@color/blue_palette"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_bad_rate_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_submit_rate_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_box_bad_rate_payment"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/selection_athens_iron"
             android:paddingStart="70dp"
             android:paddingTop="40dp"
             android:paddingEnd="70dp"
             android:paddingBottom="40dp"
             android:text="Submit"
             android:textAllCaps="false"
-            android:textColor="@color/white_color"
+            android:textColor="@color/cerulean_palette"
             android:textSize="70sp" />
     </RelativeLayout>
 
@@ -190,10 +221,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Thankyou for your feedback\n\nDo you want to \norder again?"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:maxLines="2"
+            android:text="Do you want to order again?"
             android:textAlignment="center"
             android:textColor="@color/black_color"
-            android:textSize="70sp" />
+            android:textSize="@dimen/text_super_large_70sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -208,11 +242,11 @@
                 android:layout_width="300dp"
                 android:layout_height="150dp"
                 android:layout_marginEnd="30dp"
-                android:background="@drawable/selection_red"
+                android:background="@drawable/selection_athens_iron"
                 android:text="No"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
+                android:textColor="@color/cerulean_palette"
                 android:textSize="50sp" />
 
             <Button
@@ -220,11 +254,11 @@
                 android:layout_width="300dp"
                 android:layout_height="150dp"
                 android:layout_marginStart="30dp"
-                android:background="@drawable/selection_blue"
+                android:background="@drawable/selection_athens_iron"
                 android:text="Yes"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textColor="@color/white_color"
+                android:textColor="@color/cerulean_palette"
                 android:textSize="50sp" />
         </LinearLayout>
     </RelativeLayout>

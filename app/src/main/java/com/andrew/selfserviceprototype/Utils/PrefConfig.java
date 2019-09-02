@@ -21,11 +21,11 @@ public class PrefConfig {
         editor.commit();
     }
 
-    public String getOrderType() {
-        return sharedPreferences.getString(context.getString(R.string.pref_order_type), "");
-    }
-
-    public String getOrderTypeId() {
-        return sharedPreferences.getString(context.getString(R.string.pref_order_type_id), "");
-    }
+//    public String getOrderType() {
+//        return sharedPreferences.getString(context.getString(R.string.pref_order_type), "");
+//    }
+//
+//    public String getOrderTypeId() {
+//        return sharedPreferences.getString(context.getString(R.string.pref_order_type_id), "");
+//    }
 }

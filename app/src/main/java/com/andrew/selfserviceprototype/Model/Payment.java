@@ -17,9 +17,16 @@ public class Payment {
     @SerializedName("payment_type")
     private String paymentType;
 
-    public Payment(String paymentId, String paymentType) {
+    @SerializedName("payment_icon")
+    private String paymentIcon;
+
+    public Payment() {
+    }
+
+    public Payment(String paymentId, String paymentType, String paymentIcon) {
         this.paymentId = paymentId;
         this.paymentType = paymentType;
+        this.paymentIcon = paymentIcon;
     }
 
     public String getResponse() {
@@ -36,5 +43,9 @@ public class Payment {
 
     public String getPaymentType() {
         return paymentType;
+    }
+
+    public String getPaymentIcon() {
+        return paymentIcon;
     }
 }

@@ -50,7 +50,7 @@
             android:background="@color/endeavour_palette"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Touch to order"
+            android:text="Touch me"
             android:textAlignment="center"
             android:textColor="@color/white_color"
             android:textSize="@dimen/text_super_large_70sp" />

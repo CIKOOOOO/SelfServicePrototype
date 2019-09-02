@@ -3,6 +3,8 @@ package com.andrew.selfserviceprototype.Utils;
 import android.util.ArrayMap;
 
 import com.andrew.selfserviceprototype.Model.MerchantData;
+import com.andrew.selfserviceprototype.Model.OrderType;
+import com.andrew.selfserviceprototype.Model.Payment;
 import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.Model.Transaction;
 
@@ -22,4 +24,12 @@ public class StaticData {
     public static Map<String, List<Integer>> QUANTITY_ORDER_MAP = new ArrayMap<>();
 
     public static List<MerchantData> MERCHANT_LIST = new ArrayList<>();
+    public static List<Product> PRODUCT_ADS_LIST = new ArrayList<>();
+    public static List<Payment> PAYMENT_LIST = new ArrayList<>();
+
+    /*
+    * Untuk penyimpanan data pembayaran dan tipe pesanan
+    * */
+    public static Payment PAYMENT;
+    public static OrderType ORDER_TYPE;
 }

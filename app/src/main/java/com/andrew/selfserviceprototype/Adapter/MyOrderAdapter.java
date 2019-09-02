@@ -1,9 +1,6 @@
 package com.andrew.selfserviceprototype.Adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +13,8 @@ import android.widget.TextView;
 import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.Constant;
-import com.andrew.selfserviceprototype.Utils.DecodeBitmap;
 import com.andrew.selfserviceprototype.Utils.Utils;
-import com.bumptech.glide.Glide;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -95,6 +87,24 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
             holder.view_divider.setVisibility(View.GONE);
         } else holder.view_divider.setVisibility(View.VISIBLE);
 
+        if (product.isAdvertisement()) {
+            holder.btn_minus.setEnabled(false);
+            holder.btn_plus.setEnabled(false);
+            holder.btn_minus.setBackground(mContext.getDrawable(R.drawable.ic_minus_bombay));
+            holder.btn_plus.setBackground(mContext.getDrawable(R.drawable.ic_plus_bombay));
+            holder.btn_remove.setVisibility(View.VISIBLE);
+        } else {
+            holder.btn_minus.setEnabled(true);
+            holder.btn_plus.setEnabled(true);
+            holder.btn_minus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_minus));
+            holder.btn_plus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_plus));
+            if (quantityList.get(pos) == 0) {
+                holder.btn_remove.setVisibility(View.VISIBLE);
+            } else {
+                holder.btn_remove.setVisibility(View.GONE);
+            }
+        }
+
         holder.btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,7 +117,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
             @Override
             public void onClick(View view) {
                 int quantity = quantityList.get(pos) - 1;
-                if (quantity > 0) {
+                if (quantity >= 0) {
                     quantityList.set(pos, quantity);
                     addDeleteOrder.onAddDeleteOrder(pos, quantity, true);
                     notifyDataSetChanged();

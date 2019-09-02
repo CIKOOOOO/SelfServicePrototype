@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.ContentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,18 +11,19 @@
         android:layout_height="match_parent"
         android:background="@color/white_color">
 
-        <ImageView
-            android:id="@+id/image_promo_order"
+        <com.synnapps.carouselview.CarouselView
+            android:id="@+id/carousel_image_promo_order"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:scaleType="fitXY" />
+            android:layout_height="200dp"
+            android:animateLayoutChanges="true"
+            app:indicatorVisibility="visible"
+            app:slideInterval="3000" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/text_total_price"
-            android:layout_below="@id/image_promo_order"
+            android:layout_below="@id/carousel_image_promo_order"
             android:background="@drawable/rectangle_bottom_top_stroke_black"
             android:orientation="horizontal"
             android:weightSum="3">
@@ -48,6 +49,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
                         android:text="Menu"
                         android:textColor="@color/black_color"
@@ -69,6 +71,7 @@
             </FrameLayout>
 
             <LinearLayout
+                android:id="@+id/linear_my_order"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="1dp"
@@ -118,21 +121,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal"
-            android:weightSum="3">
-
-            <Button
-                android:id="@+id/btn_cancel_order"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/selection_athens_iron"
-                android:elevation="2dp"
-                android:text="@string/cancel"
-                android:textAllCaps="false"
-                android:textColor="@color/cerulean_palette"
-                android:textSize="@dimen/text_small_17sp" />
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/btn_order_again_order"
@@ -143,7 +132,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/selection_athens_iron"
                 android:elevation="2dp"
-                android:text="@string/order_again"
+                android:text="@string/back"
                 android:textAllCaps="false"
                 android:textColor="@color/cerulean_palette"
                 android:textSize="@dimen/text_small_17sp" />
@@ -283,6 +272,99 @@
     </FrameLayout>
 
     <RelativeLayout
+        android:id="@+id/relative_ads_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_color"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/rectangle_rounded_white">
+
+            <ImageView
+                android:id="@+id/image_ads_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp" />
+
+            <TextView
+                android:id="@+id/text_product_name_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image_ads_order"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:textAlignment="center"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_small_17sp" />
+
+            <TextView
+                android:id="@+id/text_selected_price_ads_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_product_name_order"
+                android:layout_marginStart="20dp" />
+
+            <TextView
+                android:id="@+id/text_dummy_01_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_selected_price_ads_order"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="Deskripsi:" />
+
+            <TextView
+                android:id="@+id/text_description_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_dummy_01_order"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp" />
+
+            <TextView
+                android:id="@+id/text_dummy_02_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_description_order"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:text="Syarat dan Ketentuan:" />
+
+            <TextView
+                android:id="@+id/text_term_condition_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_dummy_02_order"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="5dp" />
+
+            <Button
+                android:id="@+id/btn_add_cart_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/text_term_condition_order"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/selection_athens_iron"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="Add to Cart"
+                android:textAllCaps="false"
+                android:textColor="@color/cerulean_palette" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/relative_order_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -299,4 +381,4 @@
             app:pv_progressStyle="@style/CircularProgress" />
 
     </RelativeLayout>
-</androidx.appcompat.widget.ContentFrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -113,28 +113,57 @@
             android:textColor="@color/blue_palette"
             android:textSize="@dimen/text_medium_25sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_rating_payment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_title_payment"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
-
         <TextView
             android:id="@+id/text_rate_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recycler_rating_payment"
+            android:layout_below="@id/text_title_payment"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:textSize="@dimen/text_small_17sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_rating_payment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_rate_payment"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_box_bad_rate_payment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recycler_rating_payment"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rectangle_rounded_blue"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="What can we improve?"
+                android:textColor="@color/blue_palette"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_bad_rate_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_submit_rate_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text_rate_payment"
+            android:layout_below="@id/ll_box_bad_rate_payment"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/selection_athens_iron"

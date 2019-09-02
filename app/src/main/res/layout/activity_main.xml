@@ -21,17 +21,6 @@
         android:layout_marginBottom="-2dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_title_main"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="FoodPrint"
-            android:textColor="@color/white_color"
-            android:textSize="@dimen/text_super_large_70sp"
-            android:visibility="gone" />
-
         <com.synnapps.carouselview.CarouselView
             android:id="@+id/carousel_main_activity"
             android:layout_width="match_parent"
@@ -51,7 +40,7 @@
             android:background="@color/endeavour_palette"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Touch to order"
+            android:text="Touch me to order"
             android:textAlignment="center"
             android:textColor="@color/white_color"
             android:textSize="@dimen/text_large_30sp" />

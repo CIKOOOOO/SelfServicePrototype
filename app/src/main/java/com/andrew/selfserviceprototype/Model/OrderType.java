@@ -18,6 +18,11 @@ public class OrderType {
     @SerializedName("order_type_name")
     private String orderTypeName;
 
+    @SerializedName("order_type_icon")
+    private String orderTypeIcon;
+
+
+
     public String getResponse() {
         return response;
     }
@@ -32,5 +37,9 @@ public class OrderType {
 
     public String getOrderTypeName() {
         return orderTypeName;
+    }
+
+    public String getOrderTypeIcon() {
+        return orderTypeIcon;
     }
 }
