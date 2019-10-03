@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_confirm_order"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/asset_background_grid"
@@ -262,7 +263,12 @@
         android:layout_height="match_parent"
         android:background="@color/white_color"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/et_qr_reader_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <RelativeLayout
             android:id="@+id/relative_payment_confirm_order_01"
@@ -422,6 +428,15 @@
             android:layout_marginTop="10dp"
             android:text="SKIP"
             android:textColor="@color/iron_palette" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_confirm_order"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:indeterminate="false"
+            android:progress="1" />
     </RelativeLayout>
 
     <RelativeLayout

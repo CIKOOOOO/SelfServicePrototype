@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:orientation="horizontal">
 
     <TextView
@@ -13,11 +13,11 @@
         android:layout_marginStart="10dp"
         android:background="@drawable/rectangle_rounded_white"
         android:paddingStart="20dp"
-        android:paddingTop="8dp"
+        android:paddingTop="16dp"
         android:paddingEnd="20dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="16dp"
         android:textColor="@color/black_color"
-        android:textSize="@dimen/text_small_17sp"
+        android:textSize="@dimen/text_large_30sp"
         android:visibility="gone" />
 
     <TextView
@@ -30,7 +30,8 @@
         android:layout_marginEnd="20dp"
         android:layout_toStartOf="@id/recycler_price_confirm_order"
         android:maxLines="2"
-        android:textSize="@dimen/text_small_17sp" />
+        android:text="(1x) Durian Blizzard Threats"
+        android:textSize="@dimen/text_medium_25sp" />
 
     <TextView
         android:id="@+id/recycler_price_confirm_order"
@@ -38,7 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp"
-        android:textSize="@dimen/text_small_17sp" />
+        android:text="IDR 57,000 ,-"
+        android:textSize="@dimen/text_medium_25sp" />
 
     <TextView
         android:id="@+id/recycler_discount_confirm_order"
@@ -48,5 +50,68 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:textSize="@dimen/text_small_17sp" />
+        android:text="- IDR 11,400"
+        android:textSize="@dimen/text_medium_25sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/recycler_linear_quantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recycler_product_name_confirm_order"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/recycler_btn_minus_confirm_order"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/selection_ic_box_minus" />
+
+        <TextView
+            android:id="@+id/recycler_text_quantity_confirm_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="1"
+            android:textSize="@dimen/text_medium_25sp" />
+
+        <ImageButton
+            android:id="@+id/recycler_btn_plus_confirm_order"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/selection_ic_box_plus" />
+
+        <Button
+            android:id="@+id/recycler_btn_remove_confirm_order"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/selection_blue"
+            android:elevation="2dp"
+            android:text="Remove"
+            android:textAllCaps="false"
+            android:textColor="@color/white_color"
+            android:textSize="@dimen/text_medium_25sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/recycler_line_confirm_order"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/recycler_linear_quantity"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="40dp"
+        android:alpha="0.2"
+        android:background="@color/black_color"
+        android:visibility="visible" />
 </RelativeLayout>

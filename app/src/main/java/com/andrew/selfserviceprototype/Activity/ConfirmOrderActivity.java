@@ -1,6 +1,7 @@
 package com.andrew.selfserviceprototype.Activity;
 
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,22 +9,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.AlertDialog;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Parcelable;
+import android.os.RemoteException;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andrew.selfserviceprototype.Adapter.BadRateAdapter;
 import com.andrew.selfserviceprototype.Adapter.ConfirmOrderAdapter;
@@ -38,7 +48,10 @@ import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
 import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.andrew.selfserviceprototype.Utils.Utils;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -61,7 +74,24 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     private static final String TAG = ConfirmOrderActivity.class.getSimpleName();
     private static final int RESULT = 12;
 
-    private TextView text_price, text_total_price, text_tax, text_payment_type, text_rate, text_title_discount, text_discount;
+    private static final String TAG_00 = "000201";
+    private static final String TAG_01 = "010212";
+    private static final String TAG_26 = "2654000200011893600014300001599902150008850000159990303UKE";
+    private static final String TAG_52 = "52045411";
+    private static final String TAG_53 = "5303360";
+    private String TAG_54 = "";
+    private static final String TAG_55 = "550201";
+    private static final String TAG_58 = "5802ID";
+    private static final String TAG_59 = "5910MENARA BCA";
+    private static final String TAG_60 = "6007JAKARTA";
+    private static final String TAG_61 = "610510310";
+    private static final String TAG_62 = "6238";
+    private static final String TAG_62_01 = "0106100023";
+    private static final String TAG_62_05 = "0512924013100023";
+    private static final String TAG_62_07 = "0708DHMPN003";
+    private static final String TAG_63 = "6304";
+
+    private TextView text_price, text_total_price, text_tax, text_payment_type, text_rate, text_title_discount, text_discount, text_timer;
     private RecyclerView recyclerView, recycler_payment;
     private ImageView image_icon;
     private RelativeLayout relative_loading, relative_success, relative_rate, relative_payment;
@@ -69,6 +99,8 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     private BottomSheetBehavior bottomSheetBehavior;
     private LinearLayout linear_improve;
     private Button btn_order;
+    private ProgressBar progressBar;
+    private EditText et_qr_reader;
 
     private ConfirmOrderAdapter confirmOrderAdapter;
     private ApiInterface apiInterface;
@@ -79,7 +111,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     private List<Integer> quantityList;
     private List<Product> orderList;
     private double taxAmount, price, totalDiscount;
-    private int rate;
+    private int rate, countPrint;
     private String TID;
 
     @Override
@@ -90,6 +122,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initVar() {
+        countPrint = 0;
         taxAmount = 0;
         price = 0;
         totalDiscount = 0;
@@ -119,6 +152,9 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         text_discount = findViewById(R.id.text_discount_confirm_order);
         text_title_discount = findViewById(R.id.text_discount_title_confirm_order);
         relative_payment = findViewById(R.id.relative_payment_confirm_order);
+        progressBar = findViewById(R.id.progress_bar_confirm_order);
+        et_qr_reader = findViewById(R.id.et_qr_reader_confirm_order);
+        text_timer = findViewById(R.id.text_timer_confirm_order);
 
         quantityList = new ArrayList<>();
         orderList = new ArrayList<>();
@@ -175,37 +211,120 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.btn_order_confirm_order:
 //                relative_payment.getBackground().setAlpha(Constant.MAX_ALPHA);
-                relative_payment.setVisibility(View.VISIBLE);
-                ImageView image_qr = findViewById(R.id.image_qr_payment_confirm_order);
-                TextView text = findViewById(R.id.text_payment_type_confirm_order);
-                switch (StaticData.PAYMENT.getPaymentId()) {
-                    case "1":
-                        Picasso.get()
-                                .load(R.drawable.asset_qr)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .into(image_qr);
-                        text.setText("Please scan the barcode");
-                        break;
-                    case "2":
-                        Picasso.get()
-                                .load(Constant.PAYMENT_URL + StaticData.PAYMENT.getPaymentIcon())
-                                .networkPolicy(NetworkPolicy.NO_CACHE)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .into(image_qr);
-                        text.setText(getResources().getString(R.string.order_qr_reader));
-                        break;
+//                et_qr_reader.setText("");
+                int printerStatus = 100;
+                try {
+                    printerStatus = getPrinterService().getPrinterStatus();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
                 }
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        sendData();
-                    }
-                }, Constant.MAX_DURATION_PAYMENT);
+//                sendData();
 
+                switch (printerStatus) {
+                    case 0:
+                        // printer status normal and connected
+                        new CountDownTimer(5000, 1000) {
+                            @Override
+                            public void onTick(long l) {
+                                text_timer.setText("Time left to complete payment: " + l / 1000 + " s");
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                et_qr_reader.setFocusable(false);
+                                relative_payment.setVisibility(View.GONE);
+                            }
+                        }.start();
+
+                        relative_payment.setVisibility(View.VISIBLE);
+                        ImageView image_qr = findViewById(R.id.image_qr_payment_confirm_order);
+                        TextView text = findViewById(R.id.text_payment_type_confirm_order);
+                        switch (StaticData.PAYMENT.getPaymentId()) {
+                            case "1":
+                                String priceLength = Utils.removeDot(String.valueOf(price)) + "";
+
+                                if (priceLength.length() < 10) {
+                                    priceLength = "0" + Utils.removeDot(String.valueOf(price)).length();
+                                }
+
+                                TAG_54 = "54" + priceLength + Utils.removeDot(String.valueOf(price));
+
+                                String dataBefCRC = TAG_00 + TAG_01 + TAG_26 + TAG_52 + TAG_53 + TAG_54
+                                        + TAG_55 + TAG_58 + TAG_59 + TAG_60 + TAG_61 + TAG_62 + TAG_62_01
+                                        + TAG_62_05 + TAG_62_07 + TAG_63;
+
+                                String data = TAG_00 + TAG_01 + TAG_26 + TAG_52 + TAG_53 + TAG_54 + TAG_55
+                                        + TAG_58 + TAG_59 + TAG_60 + TAG_61 + TAG_62 + TAG_62_01 + TAG_62_05
+                                        + TAG_62_07 + TAG_63 + Utils.getCRC(dataBefCRC);
+
+                                image_qr.setVisibility(View.VISIBLE);
+
+                                try {
+                                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                                    Bitmap bitmap = barcodeEncoder.encodeBitmap(data, BarcodeFormat.QR_CODE, 200, 200);
+                                    Glide.with(this).load(bitmap).into(image_qr);
+                                } catch (Exception e) {
+
+                                }
+                                text.setText("Please scan the barcode");
+                                break;
+                            case "2":
+                                countPrint = 0;
+                                Picasso.get()
+                                        .load(Constant.PAYMENT_URL + StaticData.PAYMENT.getPaymentIcon())
+                                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                        .into(image_qr);
+                                text.setText(getResources().getString(R.string.order_qr_reader));
+
+                                et_qr_reader.setFocusable(true);
+                                et_qr_reader.requestFocus();
+
+                                et_qr_reader.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable editable) {
+                                        countPrint++;
+                                        if (countPrint == 1) {
+                                            sendData();
+                                        }
+                                    }
+                                });
+
+                                Utils.hideSoftKeyboardFromRoot((CoordinatorLayout) findViewById(R.id.coordinator_confirm_order), this);
+                                Utils.hideSoftKeyboard(this);
+                                break;
+                        }
+
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        }, Constant.MAX_DURATION_PAYMENT);
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                        // ask for help, make dialog
+                        Toast.makeText(this, "Cannot print receipt!", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 4:
+                        // what should we do if this happen?
+                        break;
+                }
                 break;
             case R.id.btn_cancel_confirm_order:
-                setResult(RESULT_OK);
+                setResult(2);
                 StaticData.PRODUCT_ORDER_MAP.clear();
                 StaticData.QUANTITY_ORDER_MAP.clear();
 
@@ -423,6 +542,8 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
                     relative_payment.setVisibility(View.GONE);
                     relative_success.setVisibility(View.VISIBLE);
 
+                    printPayment();
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -434,6 +555,26 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
 
 //                            relative_rate.setBackground(getResources().getDrawable(R.drawable.asset_background_food));
                             relative_rate.setVisibility(View.VISIBLE);
+
+                            progressBar.setMax(2000);
+                            setProgressAnimate(progressBar, 20);
+
+                            new CountDownTimer(20000, 10) {
+                                @Override
+                                public void onTick(long l) {
+//                                    int a = (int) ((22000 - l) / 1000);
+//                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                        progressBar.setProgress(a, true);
+//                                    }
+//                                    setProgressAnimate(progressBar, 20000);
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    finishAffinity();
+                                    startActivity(new Intent(ConfirmOrderActivity.this, MainActivity.class));
+                                }
+                            }.start();
                         }
                     }, 3000);
                 } else {
@@ -475,6 +616,13 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
                 });
             }
         }
+    }
+
+    private void setProgressAnimate(ProgressBar expbar, int progressTo) {
+        ObjectAnimator animation = ObjectAnimator.ofInt(expbar, "progress", expbar.getProgress(), progressTo * 100);
+        animation.setDuration(20000);
+        animation.setInterpolator(new AccelerateDecelerateInterpolator());
+        animation.start();
     }
 
     private class AsyncRunner extends AsyncTask<Void, Void, Void> {
@@ -545,6 +693,98 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
             totalPriceQuantity();
 
             relative_loading.setVisibility(View.GONE);
+        }
+    }
+
+    private void printPayment() {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.print_bca);
+
+        String[] tern_merch = {"Term# AX123456", "Merch #00085000123456"};
+        String[] phone = {"0897*****22", ""};
+        String[] payment_date = {"PAYMENT QR", "DATE/TIME " + Utils.getTime("dd MMM,yy HH:mm").toUpperCase()};
+        String[] type = {"ISSUER TYPE", ""};
+        String[] batch_trace = {"BATCH: 000001", "TRACE NO: 100005"};
+        String[] ref_appr = {"REF.NO: 9119171", "APPR.CODE 360078"};
+        String[] paymentTotal = {"TOTAL", "Rp " + Utils.priceFormat(price + taxAmount - totalDiscount) + ",-"};
+        int[] colsWidth = {15, 30};
+        int[] colsAlign = {0, 2};
+        String[][] data = {tern_merch, phone, payment_date, type, batch_trace, ref_appr, paymentTotal};
+
+        try {
+            getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x1});
+            getPrinterService().printText("QR RECEIPT");
+            getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x0});
+            getPrinterService().lineWrap(1);
+            getPrinterService().setAlignMode(1);
+            getPrinterService().printBitmap(bitmap, 0);
+            getPrinterService().printText("Grand Indonesia");
+            getPrinterService().lineWrap(1);
+            getPrinterService().printText("Jl. MH Thamrin No 1");
+            getPrinterService().lineWrap(2);
+
+            for (int i = 0; i < data.length; i++) {
+                if (i == 1 || i == 3 || i == 6) {
+                    getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x1}); // to bold
+                    getPrinterService().setFontZoom(2, 1);
+                } else {
+                    getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x0}); // to unbold
+                    getPrinterService().setFontZoom(1, 1);
+                }
+                getPrinterService().printColumnsText(data[i], colsWidth, colsAlign);
+            }
+
+            getPrinterService().setFontZoom(1, 1);
+            getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x0});
+            getPrinterService().lineWrap(1);
+            getPrinterService().setAlignMode(1);
+            getPrinterService().printText("***** SIGNATURE NOT REQUIRED *****");
+            getPrinterService().lineWrap(2);
+            getPrinterService().setAlignMode(0);
+            getPrinterService().printText("VERSION SOFTWARE");
+            getPrinterService().lineWrap(5);
+            getPrinterService().cutPaper(1, 0);
+
+            for (int i = 0; i < quantityList.size(); i++) {
+                if (quantityList.get(i) == -1) {
+                    for (int j = 0; j < StaticData.MERCHANT_LIST.size(); j++) {
+                        if (orderList.get(i).getMerchantId().equals(StaticData.MERCHANT_LIST.get(j).getMerchantId())) {
+                            getPrinterService().setFontZoom(2, 2);
+                            getPrinterService().setAlignMode(1);
+                            getPrinterService().printText(StaticData.MERCHANT_LIST.get(j).getMerchantName());
+                            getPrinterService().setFontZoom(1, 1);
+                            getPrinterService().lineWrap(2);
+                            getPrinterService().printText("----------------------------------------------");
+                            getPrinterService().setFontZoom(2, 2);
+                            getPrinterService().lineWrap(1);
+                            getPrinterService().setAlignMode(0);
+                            getPrinterService().printText("No. Urut : 1");
+                            getPrinterService().lineWrap(1);
+                            getPrinterService().setFontZoom(1, 1);
+                            getPrinterService().printText("----------------------------------------------");
+                            getPrinterService().lineWrap(2);
+                            getPrinterService().setAlignMode(0);
+                            getPrinterService().printText("Pesanan: " + StaticData.ORDER_TYPE.getOrderTypeName());
+                            getPrinterService().lineWrap(1);
+                            break;
+                        }
+                    }
+                } else {
+                    getPrinterService().printText("(" + quantityList.get(i) + "x) " + orderList.get(i).getProductName());
+                    getPrinterService().lineWrap(1);
+                }
+                if (i + 1 == quantityList.size() || quantityList.get(i + 1) == -1) {
+                    getPrinterService().lineWrap(2);
+                    getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x1});
+                    getPrinterService().setAlignMode(1);
+                    getPrinterService().printText("HARAP TUNJUKKAN STRUK INI\nUNTUK MENGAMBIL PESANAN ANDA");
+                    getPrinterService().sendRawData(new byte[]{0x1B, 0x45, 0x0});
+                    getPrinterService().lineWrap(5);
+                    getPrinterService().cutPaper(1, 0);
+                }
+            }
+
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 }

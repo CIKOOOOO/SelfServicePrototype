@@ -11,6 +11,7 @@ import retrofit2.Response;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.Rating;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import com.andrew.selfserviceprototype.Utils.PrefConfig;
 import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.andrew.selfserviceprototype.Utils.Utils;
 import com.bumptech.glide.Glide;
+import com.google.zxing.BarcodeFormat;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
@@ -194,8 +197,19 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         switch (paymentList.get(pos).getPaymentId()) {
             case "1":
                 isDataSend = true;
+                String data = "0002010102122654000200011893600014300001599902150008850000159990303UKE52045411530336054031005502015802ID5910MENARA BCA6007JAKARTA6105103106238010610002305129240131000230708DHMPN0036304F8F1";
+
                 image_qr.setVisibility(View.VISIBLE);
-                DecodeBitmap.setScaledImageView(image_qr, R.drawable.asset_qr, this);
+                try {
+                    Log.e("asd", "masuk");
+                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                    Bitmap bitmap = barcodeEncoder.encodeBitmap(data, BarcodeFormat.QR_CODE, 200, 200);
+                    image_qr.setImageBitmap(bitmap);
+//                    Glide.with(this).load(bitmap).into(image_qr);
+                } catch (Exception e) {
+
+                }
+
                 text_payment_type.setText("Please scan the barcode");
                 break;
             case "2":

@@ -408,6 +408,8 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
             text_total_price.setText("Price : IDR 0,- (0 pcs)");
             myOrderAdapter.setList(myOrderList, quantityList);
             myOrderAdapter.notifyDataSetChanged();
+        } else if (resultCode == 2) {
+            finish();
         }
     }
 

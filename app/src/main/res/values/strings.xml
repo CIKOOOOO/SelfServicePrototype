@@ -12,4 +12,5 @@
     <string name="pref_file" />
     <string name="pref_order_type_id" />
     <string name="pref_order_type" />
+    <string name="asd"><b>Andrew</b></string>
 </resources>

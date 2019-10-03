@@ -22,11 +22,10 @@ public class Constant {
     public static final long MAX_DURATION_PAYMENT = 5000;
     public static final long MAX_DURATION_IDLE = 30000;
 
-    private static final String[] ratingList = {"Not Satisfied", "Less Satisfied", "Enough", "Satisfied", "Very Satisfied"};
-    /*
-     * Ganti promo, food option, unfriendly ux
-     * */
-    private static final String[] badRateList = {"Limited food variant", "Payment method", "Too complicated", "Less promo", "Machine too slow", "Others"};
+    private static final String[] ratingList = {"Not Satisfied", "Less Satisfied", "Enough"
+            , "Satisfied", "Very Satisfied"};
+    private static final String[] badRateList = {"Limited food variant", "Payment method"
+            , "Too complicated", "Less promo", "Machine too slow", "Others"};
     private static final Boolean[] falseList = {false, false, false, false, false, false};
 
     public static List<String> getRatingList() {

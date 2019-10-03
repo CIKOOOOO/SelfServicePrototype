@@ -177,7 +177,7 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
 
     @Override
     public void onClick(int position) {
-        if (position < 5) {
+        if (position < 6) {
             Intent intent = new Intent(MerchantListActivity.this, OrderActivity.class);
             intent.putExtra(OrderActivity.MERCHANT_DATA, (Parcelable) StaticData.MERCHANT_LIST.get(position));
             startActivity(intent);
