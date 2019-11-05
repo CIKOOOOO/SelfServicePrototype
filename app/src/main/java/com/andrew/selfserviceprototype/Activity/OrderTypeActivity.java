@@ -145,6 +145,8 @@ public class OrderTypeActivity extends BaseActivity implements OrderTypeAdapter.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_next_order_type:
+                PrefConfig prefConfig = new PrefConfig(this);
+                prefConfig.setTutorial(false);
                 Intent intent = new Intent(OrderTypeActivity.this, MerchantListActivity.class);
                 startActivity(intent);
                 break;

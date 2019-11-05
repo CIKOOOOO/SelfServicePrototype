@@ -20,7 +20,7 @@
         <com.synnapps.carouselview.CarouselView
             android:id="@+id/carousel_merchant_list"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="350dp"
             android:animateLayoutChanges="true"
             app:indicatorVisibility="visible"
             app:slideInterval="3000" />
@@ -28,85 +28,30 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
 
-            <ImageButton
-                android:id="@+id/img_btn_back_merchant_list"
+            <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/selection_cerulean_turqoise_arrow"
-                android:padding="5dp" />
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_toStartOf="@id/image_button_search_merchant_list"
+                android:cursorVisible="false"
+                android:fontFamily="@font/sniglet_reguler"
+                android:hint="Search"
+                android:maxLines="1"
+                android:textSize="@dimen/text_large_30sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_horizontal"
-                android:text="Order Here"
-                android:textColor="@color/black_color"
-                android:textSize="@dimen/text_large_45sp"
-                android:textStyle="bold"
-                android:visibility="visible" />
-
-            <LinearLayout
-                android:id="@+id/linear_cart_merchant_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:id="@+id/image_button_search_merchant_list"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageButton
-                        android:id="@+id/image_button_trolley_merchant_list"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/ic_trolley_blue" />
-
-                    <TextView
-                        android:id="@+id/text_quantity_product_merchant_list"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="-20dp"
-                        android:layout_toEndOf="@id/image_button_trolley_merchant_list"
-                        android:background="@drawable/rectangle_rounded_endouver"
-                        android:maxLines="1"
-                        android:paddingStart="5dp"
-                        android:paddingTop="2dp"
-                        android:paddingEnd="5dp"
-                        android:paddingBottom="2dp"
-                        android:text="0"
-                        android:textAlignment="center"
-                        android:textColor="@color/white_color"
-                        android:textSize="@dimen/text_small_17sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-                <TextView
-                    android:id="@+id/text_price_merchant_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/rectangle_rounded_endouver"
-                    android:minWidth="50dp"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="Rp 0,-"
-                    android:textAlignment="center"
-                    android:textColor="@color/white_color"
-                    android:textSize="@dimen/text_small_17sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/ic_search" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -114,9 +59,119 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:overScrollMode="never" />
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="250dp"
+            android:fadeScrollbars="true"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollbarSize="5dp"
+            android:scrollbarThumbVertical="@android:color/darker_gray"
+            android:scrollbars="vertical" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white_color">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/iron_palette" />
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ll_dummy_1_merchant_list"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:columnCount="2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Total Pesanan (exc. Tax)"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <TextView
+                android:id="@+id/text_price_merchant_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=" : IDR 290.000,-"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Jumlah Pesanan"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <TextView
+                android:id="@+id/text_quantity_product_merchant_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=" : 12 pcs"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+        </GridLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_dummy_1_merchant_list"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btn_cancel_merchant_list"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selection_athens_iron"
+                android:elevation="2dp"
+                android:text="Cancel Order"
+                android:textAllCaps="false"
+                android:textColor="@color/cerulean_palette"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <Button
+                android:id="@+id/btn_checkout_merchant_list"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/selection_turqoise_cerulean"
+                android:elevation="2dp"
+                android:paddingStart="70dp"
+                android:text="Checkout"
+                android:textAllCaps="false"
+                android:textColor="@color/white_color"
+                android:textSize="@dimen/text_large_30sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="240dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/ic_trolley" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relative_ads_merchant_list"
@@ -208,7 +263,7 @@
                 android:text="Add to Cart"
                 android:textAllCaps="false"
                 android:textColor="@color/cerulean_palette"
-                android:textSize="@dimen/text_large_30sp" />
+                android:textSize="@dimen/text_small_17sp" />
         </RelativeLayout>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

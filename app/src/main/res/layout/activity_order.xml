@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/text_total_price"
+            android:layout_above="@id/text_total_price_order"
             android:layout_below="@id/carousel_image_promo_order"
             android:background="@drawable/rectangle_bottom_top_stroke_black"
             android:orientation="horizontal"
@@ -99,7 +99,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/text_total_price"
+            android:id="@+id/text_total_price_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/ll_order_04"

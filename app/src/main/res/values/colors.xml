@@ -25,7 +25,8 @@
     <color name="ripe_lemon_palette">#eef21f</color>
     <color name="selective_yellow_palette">#ffb200</color>
     <color name="west_coast_palette">#603e1a</color>
-    <color name="cerulean_palette">#109ec9</color>
+    <color name="cerulean_palette">#265fa5</color>
+    <!--<color name="cerulean_palette">#109ec9</color>-->
     <color name="tamarillo_palette">#841111</color>
     <color name="silver_palette">#c0c0c0</color>
     <color name="abbey_palette">#4a4d54</color>

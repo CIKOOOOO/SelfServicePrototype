@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,13 +28,18 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
     private Context mContext;
     private List<Product> productList;
     private List<Integer> quantityList;
+    private List<Boolean> isUpdate;
 
-    public interface addDeleteOrder {
+    public interface iAdapterMyOrder {
         void onAddDeleteOrder(int pos, int quantity, boolean isDelete);
+
+        void onDelete(int pos);
+
+        void onUpdateList(int pos);
     }
 
-    public interface deleteOrder {
-        void onDelete(int pos);
+    public void setIsUpdate(List<Boolean> isUpdate) {
+        this.isUpdate = isUpdate;
     }
 
     public void setList(List<Product> product, List<Integer> qty) {
@@ -40,15 +47,15 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
         this.quantityList = qty;
     }
 
-    private deleteOrder deleteOrder;
-    private addDeleteOrder addDeleteOrder;
+    private iAdapterMyOrder iAdapterMyOrder;
 
-    public MyOrderAdapter(Context mContext, List<Product> productList, List<Integer> quantityList, MyOrderAdapter.deleteOrder deleteOrder, MyOrderAdapter.addDeleteOrder addDeleteOrder) {
+    public MyOrderAdapter(Context mContext, List<Product> productList, List<Integer> quantityList
+            , List<Boolean> isUpdate, iAdapterMyOrder iAdapterMyOrder) {
         this.mContext = mContext;
+        this.iAdapterMyOrder = iAdapterMyOrder;
         this.productList = productList;
         this.quantityList = quantityList;
-        this.deleteOrder = deleteOrder;
-        this.addDeleteOrder = addDeleteOrder;
+        this.isUpdate = isUpdate;
     }
 
     @NonNull
@@ -69,7 +76,6 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
 
         holder.text_quantity.setText(quantityList.get(pos) + "");
         holder.text_title.setText(product.getProductName());
-
         holder.text_price.setText("Price : IDR " + Utils.priceFormat(quantityList.get(pos) * product.getProductPrice()));
 
         holder.text_price.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -87,28 +93,41 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
             holder.view_divider.setVisibility(View.GONE);
         } else holder.view_divider.setVisibility(View.VISIBLE);
 
-        if (product.isAdvertisement()) {
-            holder.btn_minus.setEnabled(false);
-            holder.btn_plus.setEnabled(false);
-            holder.btn_minus.setBackground(mContext.getDrawable(R.drawable.ic_minus_bombay));
-            holder.btn_plus.setBackground(mContext.getDrawable(R.drawable.ic_plus_bombay));
+        if (isUpdate.get(pos)) {
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(500); //You can manage the blinking time with this parameter
+            anim.setStartOffset(20);
+            anim.setRepeatMode(Animation.REVERSE);
+            anim.setRepeatCount(5);
+            holder.itemView.startAnimation(anim);
+            isUpdate.set(pos, false);
+            iAdapterMyOrder.onUpdateList(pos);
+        }
+
+//        if (product.isAdvertisement()) {
+//            holder.btn_minus.setEnabled(false);
+//            holder.btn_plus.setEnabled(false);
+//            holder.btn_minus.setBackground(mContext.getDrawable(R.drawable.ic_minus_bombay));
+//            holder.btn_plus.setBackground(mContext.getDrawable(R.drawable.ic_plus_bombay));
+//            holder.btn_remove.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.btn_minus.setEnabled(true);
+//            holder.btn_plus.setEnabled(true);
+//            holder.btn_minus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_minus));
+//            holder.btn_plus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_plus));
+//
+//        }
+
+        if (quantityList.get(pos) == 0) {
             holder.btn_remove.setVisibility(View.VISIBLE);
         } else {
-            holder.btn_minus.setEnabled(true);
-            holder.btn_plus.setEnabled(true);
-            holder.btn_minus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_minus));
-            holder.btn_plus.setBackground(mContext.getDrawable(R.drawable.selection_ic_box_plus));
-            if (quantityList.get(pos) == 0) {
-                holder.btn_remove.setVisibility(View.VISIBLE);
-            } else {
-                holder.btn_remove.setVisibility(View.GONE);
-            }
+            holder.btn_remove.setVisibility(View.GONE);
         }
 
         holder.btn_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteOrder.onDelete(pos);
+                iAdapterMyOrder.onDelete(pos);
                 notifyDataSetChanged();
             }
         });
@@ -119,7 +138,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
                 int quantity = quantityList.get(pos) - 1;
                 if (quantity >= 0) {
                     quantityList.set(pos, quantity);
-                    addDeleteOrder.onAddDeleteOrder(pos, quantity, true);
+                    iAdapterMyOrder.onAddDeleteOrder(pos, quantity, true);
                     notifyDataSetChanged();
                 }
             }
@@ -129,8 +148,15 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Holder> 
             @Override
             public void onClick(View view) {
                 int quantity = quantityList.get(pos) + 1;
-                quantityList.set(pos, quantity);
-                addDeleteOrder.onAddDeleteOrder(pos, quantity, false);
+                if (product.isAdvertisement()) {
+                    if (quantity <= 1) {
+                        quantityList.set(pos, quantity);
+                        iAdapterMyOrder.onAddDeleteOrder(pos, quantity, false);
+                    }
+                } else {
+                    quantityList.set(pos, quantity);
+                    iAdapterMyOrder.onAddDeleteOrder(pos, quantity, false);
+                }
                 notifyDataSetChanged();
             }
         });

@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">KiosK</string>
+    <string name="app_name">Atom</string>
+    <string name="pref_tutorial" />
     <string name="cancel">Cancel</string>
     <string name="continues">Continue</string>
     <string name="back">Back</string>
@@ -12,5 +13,4 @@
     <string name="pref_file" />
     <string name="pref_order_type_id" />
     <string name="pref_order_type" />
-    <string name="asd"><b>Andrew</b></string>
 </resources>

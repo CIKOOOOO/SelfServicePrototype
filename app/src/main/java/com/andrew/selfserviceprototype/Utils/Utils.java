@@ -54,11 +54,13 @@ public class Utils {
         String crc_temp = Integer.toHexString(crc);
         while (crc_temp.length() != 4) {
             if (crc_temp.length() < 4) {
-                crc_temp = "0" + crc_temp.substring(1);
-                Log.e("asd", "Less than " + crc_temp);
+                /*
+                 * If length of crc is less then 4
+                 * , then we should add 0 in front of value until it length become 4
+                 * */
+                crc_temp = "0" + crc_temp;
             } else {
                 crc_temp = crc_temp.substring(0, 4);
-                Log.e("asd", "greater than " + crc_temp);
             }
         }
         return crc_temp;

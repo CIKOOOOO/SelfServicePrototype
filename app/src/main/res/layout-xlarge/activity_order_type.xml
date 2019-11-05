@@ -37,8 +37,8 @@
                 android:text="Which one do you prefer?"
                 android:textAlignment="center"
                 android:textColor="@color/black_color"
-                android:textSize="@dimen/text_medium_25sp"
-                android:visibility="gone" />
+                android:textSize="@dimen/text_large_45sp"
+                android:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_order_type"
@@ -70,7 +70,7 @@
                 android:text="Choose payment"
                 android:textAlignment="center"
                 android:textColor="@color/black_color"
-                android:textSize="@dimen/text_super_large_70sp"
+                android:textSize="@dimen/text_large_45sp"
                 android:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView

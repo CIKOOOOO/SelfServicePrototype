@@ -28,13 +28,13 @@ import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
+import com.andrew.selfserviceprototype.Utils.PrefConfig;
 import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.andrew.selfserviceprototype.Utils.Utils;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ImageListener;
 
 import java.util.ArrayList;
@@ -43,17 +43,21 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+import uk.co.samuelwall.materialtaptargetprompt.extras.backgrounds.RectanglePromptBackground;
+import uk.co.samuelwall.materialtaptargetprompt.extras.focals.RectanglePromptFocal;
 
 public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnClick
-        , View.OnClickListener, MyOrderAdapter.addDeleteOrder, MyOrderAdapter.deleteOrder {
+        , View.OnClickListener, MyOrderAdapter.iAdapterMyOrder {
     public static final String MERCHANT_DATA = "merchant_data";
+    public static final String MID = "mid";
 
     private static final String TAG = OrderActivity.class.getSimpleName();
     private static final int RESULT = 12;
 
     private FrameLayout frame_order;
-    private RelativeLayout relative_loading, relative_ads;
-    private TextView text_quantity, text_frame_price, text_total_price;
+    private RelativeLayout relative_loading, relative_ads, relative;
+    private TextView text_quantity, text_frame_price, text_total_price, text_total_quantity;
     private Button btn_continue, btn_back;
     private CarouselView carousel_promo;
     private RecyclerView recycler_my_order;
@@ -62,10 +66,12 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
     private MyOrderAdapter myOrderAdapter;
     private MerchantData merchantData;
     private ApiInterface apiInterface;
+    private PrefConfig prefConfig;
 
     private List<Product> productList;
     private List<Product> myOrderList;
     private List<Integer> quantityList;
+    private List<Boolean> isUpdateList;
 
     private double unitPrice, totalPrice;
     private int totalQuantity, adsPosition;
@@ -83,6 +89,7 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
         totalPrice = 0;
         adsPosition = -1;
 
+        prefConfig = new PrefConfig(this);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
 
         final ImageView img_promo = findViewById(R.id.image_ads_order);
@@ -102,14 +109,17 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
         frame_order = findViewById(R.id.frame_order);
         text_quantity = findViewById(R.id.text_quantity_product_frame_order);
         text_frame_price = findViewById(R.id.text_price_frame_order);
-        text_total_price = findViewById(R.id.text_total_price);
+        text_total_price = findViewById(R.id.text_total_price_order);
         relative_ads = findViewById(R.id.relative_ads_order);
+        relative = findViewById(R.id.relative_tutorial_order);
+        text_total_quantity = findViewById(R.id.text_quantity_product_order);
 
         productList = new ArrayList<>();
         myOrderList = new ArrayList<>();
         quantityList = new ArrayList<>();
+        isUpdateList = new ArrayList<>();
         menuAdapter = new MenuAdapter(this, productList, this);
-        myOrderAdapter = new MyOrderAdapter(this, productList, quantityList, this, this);
+        myOrderAdapter = new MyOrderAdapter(this, productList, quantityList, isUpdateList, this);
 
         text_total_price.setText("Price : IDR " + Utils.priceFormat(totalPrice) + ",- (" + totalQuantity + " pcs)");
 
@@ -120,39 +130,36 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
         recycler_my_order.setLayoutManager(new LinearLayoutManager(this));
         recycler_menu.setLayoutManager(new GridLayoutManager(this, 3));
 
-        carousel_promo.setImageClickListener(new ImageClickListener() {
-            @Override
-            public void onClick(int position) {
-                adsPosition = position;
-                relative_ads.setVisibility(View.VISIBLE);
-                Picasso.get()
-                        .load(Constant.PRODUCT_URL + StaticData.PRODUCT_ADS_LIST.get(position).getProductImage())
-                        .networkPolicy(NetworkPolicy.NO_CACHE)
-                        .memoryPolicy(MemoryPolicy.NO_CACHE)
-                        .into(img_promo);
+        carousel_promo.setImageClickListener(position -> {
+            adsPosition = position;
+            relative_ads.setVisibility(View.VISIBLE);
+            Picasso.get()
+                    .load(Constant.PRODUCT_URL + StaticData.PRODUCT_ADS_LIST.get(position).getProductImage())
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(img_promo);
 
-                text_product_name.setText(StaticData.PRODUCT_ADS_LIST.get(position).getProductName());
-                text_product_price.setText("Price : Rp " + Utils.priceFormat(StaticData.PRODUCT_ADS_LIST.get(position).getProductPrice()) + ",-");
-                text_description.setText(Utils.escapeStringEnter(StaticData.PRODUCT_ADS_LIST.get(position).getProductDesc()));
-                text_term_condition.setText(Utils.escapeStringEnter(StaticData.PRODUCT_ADS_LIST.get(position).getTermCondition()));
+            text_product_name.setText(StaticData.PRODUCT_ADS_LIST.get(position).getProductName());
+            text_product_price.setText("Price : Rp " + Utils.priceFormat(StaticData.PRODUCT_ADS_LIST.get(position).getProductPrice()) + ",-");
+            text_description.setText(Utils.escapeStringEnter(StaticData.PRODUCT_ADS_LIST.get(position).getProductDesc()));
+            text_term_condition.setText(Utils.escapeStringEnter(StaticData.PRODUCT_ADS_LIST.get(position).getTermCondition()));
 
-                boolean check = true;
+            boolean check = true;
 
-                for (Product product : myOrderList) {
-                    if (product.getProductId().equals(StaticData.PRODUCT_ADS_LIST.get(position).getProductId())) {
-                        check = false;
-                        btn_add_cart.setBackground(getDrawable(R.drawable.rectangle_rounded_bombay));
-                        btn_add_cart.setTextColor(getResources().getColor(R.color.iron_palette));
-                        btn_add_cart.setEnabled(false);
-                        break;
-                    }
+            for (Product product : myOrderList) {
+                if (product.getProductId().equals(StaticData.PRODUCT_ADS_LIST.get(position).getProductId())) {
+                    check = false;
+                    btn_add_cart.setBackground(getDrawable(R.drawable.rectangle_rounded_bombay));
+                    btn_add_cart.setTextColor(getResources().getColor(R.color.iron_palette));
+                    btn_add_cart.setEnabled(false);
+                    break;
                 }
+            }
 
-                if (check) {
-                    btn_add_cart.setEnabled(true);
-                    btn_add_cart.setBackground(getDrawable(R.drawable.selection_athens_iron));
-                    btn_add_cart.setTextColor(getResources().getColor(R.color.cerulean_palette));
-                }
+            if (check) {
+                btn_add_cart.setEnabled(true);
+                btn_add_cart.setBackground(getDrawable(R.drawable.selection_athens_iron));
+                btn_add_cart.setTextColor(getResources().getColor(R.color.cerulean_palette));
             }
         });
 
@@ -207,12 +214,16 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
 
         if (isOrder) {
             add.setText("Update");
+            isUpdateList.set(position, true);
             myOrderList.set(position, product);
-            quantityList.set(position, Integer.parseInt(text_quantity.getText().toString()));
+            quantityList.set(position, Integer.parseInt(text_quantity.getText().toString()) + 1);
+            recycler_my_order.smoothScrollToPosition(position);
         } else {
             add.setText("Add");
             myOrderList.add(product);
+            isUpdateList.add(false);
             quantityList.add(Integer.parseInt(text_quantity.getText().toString()));
+            recycler_my_order.smoothScrollToPosition(((LinearLayout) findViewById(R.id.linear_my_order)).getBottom());
         }
 
         totalQuantity += Integer.parseInt(text_quantity.getText().toString());
@@ -220,11 +231,30 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
 
         frame_order.setVisibility(View.GONE);
 
+        myOrderAdapter.setIsUpdate(isUpdateList);
         myOrderAdapter.setList(myOrderList, quantityList);
         myOrderAdapter.notifyDataSetChanged();
         btn_back.setText(getResources().getString(R.string.additional_order));
-        recycler_my_order.smoothScrollToPosition(((LinearLayout) findViewById(R.id.linear_my_order)).getBottom());
+
         totalPriceQuantity();
+
+        if (!prefConfig.isShow()) {
+            new MaterialTapTargetPrompt.Builder(this)
+                    .setTarget(btn_back)
+                    .setPrimaryText("Ayo Pesan Lagi!!")
+                    .setPrimaryTextSize(30f)
+                    .setSecondaryText("Kamu bisa memesan makanan dari toko yang berbeda dalam 1 waktu yang sama lohhhhh")
+                    .setSecondaryTextSize(25f)
+                    .setPromptBackground(new RectanglePromptBackground())
+                    .setPromptFocal(new RectanglePromptFocal())
+                    .setBackgroundColour(getResources().getColor(R.color.blue_palette))
+                    .setPrimaryTextColour(getResources().getColor(R.color.white_color))
+                    .setSecondaryTextColour(getResources().getColor(R.color.white_color))
+                    .setAutoDismiss(false)
+                    .showFor(Constant.MAX_DURATION_TUTORIAL);
+
+            prefConfig.setTutorial(true);
+        }
     }
 
     @Override
@@ -308,7 +338,6 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
                         StaticData.QUANTITY_ORDER_MAP.put(StaticData.MERCHANT_LIST.get(j).getMerchantId(), integerList);
                     }
                 }
-
                 finish();
                 break;
             case R.id.btn_plus_frame_order:
@@ -342,6 +371,9 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
 
     @Override
     public void onAddDeleteOrder(int pos, int quantity, boolean isDelete) {
+        if (isDelete && quantityList.size() - 1 == pos) {
+            recycler_my_order.smoothScrollToPosition(((LinearLayout) findViewById(R.id.linear_my_order)).getBottom());
+        }
         quantityList.set(pos, quantity);
         totalPriceQuantity();
     }
@@ -359,6 +391,11 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
         myOrderAdapter.setList(myOrderList, quantityList);
     }
 
+    @Override
+    public void onUpdateList(int pos) {
+        isUpdateList.set(pos, false);
+    }
+
     private void totalPriceQuantity() {
         totalPrice = 0;
         totalQuantity = 0;
@@ -368,11 +405,12 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
             totalQuantity += quantityList.get(i);
         }
 
-        text_total_price.setText("Price : IDR " + Utils.priceFormat(totalPrice) + ",- (" + totalQuantity + " pcs)");
+        text_total_price.setText(" : IDR " + Utils.priceFormat(totalPrice) + ",-");
+        text_total_quantity.setText(" : " + totalQuantity + " pcs");
 
         if (totalQuantity > 0) {
-            btn_continue.setTextColor(getResources().getColor(R.color.cerulean_palette));
-            btn_continue.setBackground(getResources().getDrawable(R.drawable.selection_athens_iron));
+            btn_continue.setTextColor(getResources().getColor(R.color.white_color));
+            btn_continue.setBackground(getResources().getDrawable(R.drawable.selection_turqoise_cerulean));
             btn_continue.setEnabled(true);
         } else {
             btn_continue.setEnabled(false);
@@ -410,6 +448,10 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
             myOrderAdapter.notifyDataSetChanged();
         } else if (resultCode == 2) {
             finish();
+        } else if (resultCode == 3) {
+            relative_loading.setVisibility(View.GONE);
+            String MID = data.getStringExtra(OrderActivity.MID);
+            onSettingData(MID);
         }
     }
 
@@ -451,29 +493,8 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
                 Intent intent = getIntent();
                 if (intent.getParcelableExtra(MERCHANT_DATA) != null) {
                     merchantData = intent.getParcelableExtra(MERCHANT_DATA);
-                    Call<Product> call = apiInterface.getMenu("getting_menu", merchantData.getMerchantId());
-                    call.enqueue(new Callback<Product>() {
-                        @Override
-                        public void onResponse(Call<Product> call, Response<Product> response) {
-                            if (response.body().getProductList() != null) {
-                                productList = response.body().getProductList();
-                                menuAdapter.setProductList(productList);
-                                menuAdapter.notifyDataSetChanged();
-                            } else {
-                                Log.e(TAG, "WE GOT SITUATION DOWN HERE, MAYDAY MAYDAY!!!!!!!!");
-                            }
-                        }
 
-                        @Override
-                        public void onFailure(Call<Product> call, Throwable t) {
-                            Log.e(TAG, "FAILURE !!!!! GOOD BYE MY FRIEND!");
-                        }
-                    });
-
-                    for (String key : StaticData.PRODUCT_ORDER_MAP.keySet()) {
-                        quantityList.addAll(StaticData.QUANTITY_ORDER_MAP.get(key));
-                        myOrderList.addAll(StaticData.PRODUCT_ORDER_MAP.get(key));
-                    }
+                    onSettingData(merchantData.getMerchantId());
 
 //                    if (StaticData.PRODUCT_ORDER_MAP.get(merchantData.getMerchantId()) != null) {
 //                        quantityList.addAll(StaticData.QUANTITY_ORDER_MAP.get(merchantData.getMerchantId()));
@@ -510,8 +531,48 @@ public class OrderActivity extends BaseActivity implements MenuAdapter.menuOnCli
                 btn_back.setText(getResources().getString(R.string.back));
             }
 
+            for (int i = 0; i < myOrderList.size(); i++) {
+                isUpdateList.add(false);
+            }
+
+            myOrderAdapter.setIsUpdate(isUpdateList);
             myOrderAdapter.setList(myOrderList, quantityList);
             myOrderAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void onSettingData(String MID) {
+        quantityList.clear();
+        myOrderList.clear();
+        productList.clear();
+        Call<Product> call = apiInterface.getMenu("getting_menu", MID);
+        call.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                if (response.body().getProductList() != null) {
+                    productList = response.body().getProductList();
+                    menuAdapter.setProductList(productList);
+                    menuAdapter.notifyDataSetChanged();
+                } else {
+                    Log.e(TAG, "WE GOT SITUATION DOWN HERE, MAYDAY MAYDAY!!!!!!!!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
+                Log.e(TAG, "FAILURE !!!!! GOOD BYE MY FRIEND!");
+            }
+        });
+
+        for (String key : StaticData.PRODUCT_ORDER_MAP.keySet()) {
+            for (int i = 0; i < StaticData.QUANTITY_ORDER_MAP.get(key).size(); ) {
+                if (StaticData.QUANTITY_ORDER_MAP.get(key).get(i) == 0) {
+                    StaticData.QUANTITY_ORDER_MAP.get(key).remove(i);
+                    StaticData.PRODUCT_ORDER_MAP.get(key).remove(i);
+                } else i++;
+            }
+            quantityList.addAll(StaticData.QUANTITY_ORDER_MAP.get(key));
+            myOrderList.addAll(StaticData.PRODUCT_ORDER_MAP.get(key));
         }
     }
 }

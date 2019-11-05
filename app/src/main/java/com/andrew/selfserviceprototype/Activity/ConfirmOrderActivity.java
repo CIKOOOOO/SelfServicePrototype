@@ -41,6 +41,7 @@ import com.andrew.selfserviceprototype.Adapter.PaymentAdapter;
 import com.andrew.selfserviceprototype.Adapter.RatingAdapter;
 import com.andrew.selfserviceprototype.Api.ApiClient;
 import com.andrew.selfserviceprototype.Api.ApiInterface;
+import com.andrew.selfserviceprototype.Model.MerchantData;
 import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.Model.Transaction;
 import com.andrew.selfserviceprototype.R;
@@ -65,11 +66,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ConfirmOrderActivity extends BaseActivity implements View.OnClickListener
-        , PaymentAdapter.choosingPayment, RatingAdapter.starOnClick, ConfirmOrderAdapter.addDeleteOrder
-        , ConfirmOrderAdapter.menuOnDelete {
+        , PaymentAdapter.choosingPayment, RatingAdapter.starOnClick, ConfirmOrderAdapter.addDeleteOrder {
     public static final String CONFIRM_GETTING_MERCHANT_DATA = "confirm_data";
     public static final String CONFIRM_GETTING_QUANTITY_LIST = "quantity_list";
-    public static final String CONFIRM_GETTING_ORDER_LIST = "order_list";
+    public static final String IS_FROM_MERCHANT = "is_from_merchant";
 
     private static final String TAG = ConfirmOrderActivity.class.getSimpleName();
     private static final int RESULT = 12;
@@ -113,6 +113,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     private double taxAmount, price, totalDiscount;
     private int rate, countPrint;
     private String TID;
+    private boolean isFromMerchantActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initVar() {
+        isFromMerchantActivity = false;
         countPrint = 0;
         taxAmount = 0;
         price = 0;
@@ -169,7 +171,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         confirmOrderAdapter = new ConfirmOrderAdapter(ConfirmOrderActivity.this, orderList
-                , quantityList, this, this);
+                , quantityList, this);
         ratingAdapter = new RatingAdapter(ConfirmOrderActivity.this, rateList, this);
         badRateAdapter = new BadRateAdapter(badRateList, this);
 
@@ -178,11 +180,12 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         linearLayout.getBackground().setAlpha(150);
 
         btn_cancel.setOnClickListener(this);
-        btn_order.setOnClickListener(this);
         btn_change_payment.setOnClickListener(this);
         img_btn_close.setOnClickListener(this);
         btn_submit_rate.setOnClickListener(this);
         text_skip.setOnClickListener(this);
+
+        btn_order.setOnClickListener(this);
         relative_payment.setOnClickListener(this);
         relative_success.setOnClickListener(this);
         relative_rate.setOnClickListener(this);
@@ -224,7 +227,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
                 switch (printerStatus) {
                     case 0:
                         // printer status normal and connected
-                        new CountDownTimer(5000, 1000) {
+                        new CountDownTimer(Constant.MAX_DURATION_PAYMENT, 1000) {
                             @Override
                             public void onTick(long l) {
                                 text_timer.setText("Time left to complete payment: " + l / 1000 + " s");
@@ -280,6 +283,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
 
                                 et_qr_reader.setFocusable(true);
                                 et_qr_reader.requestFocus();
+                                et_qr_reader.bringToFront();
 
                                 et_qr_reader.addTextChangedListener(new TextWatcher() {
                                     @Override
@@ -294,6 +298,7 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
                                     @Override
                                     public void afterTextChanged(Editable editable) {
                                         countPrint++;
+                                        Log.e("asd", editable.toString());
                                         if (countPrint == 1) {
                                             sendData();
                                         }
@@ -304,13 +309,6 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
                                 Utils.hideSoftKeyboard(this);
                                 break;
                         }
-
-//                        new Handler().postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//
-//                            }
-//                        }, Constant.MAX_DURATION_PAYMENT);
                         break;
                     case 1:
                     case 2:
@@ -499,6 +497,43 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
+    @Override
+    public void onMenuBack(String MID) {
+        Intent intent;
+        if (isFromMerchantActivity)
+            intent = new Intent(this, OrderActivity.class);
+        else intent = getIntent();
+        intent.putExtra(OrderActivity.MID, MID);
+        intent.putExtra(OrderActivity.MERCHANT_DATA, new MerchantData("", MID, "", "", "", "", ""));
+        StaticData.PRODUCT_ORDER_MAP.clear();
+        StaticData.QUANTITY_ORDER_MAP.clear();
+
+        for (int j = 0; j < StaticData.MERCHANT_LIST.size(); j++) {
+            List<Product> list = new ArrayList<>();
+            List<Integer> integerList = new ArrayList<>();
+
+            for (int i = 0; i < orderList.size(); i++) {
+                if (quantityList.get(i) == -1)
+                    continue;
+
+                if (orderList.get(i).getMerchantId().equals(StaticData.MERCHANT_LIST.get(j).getMerchantId())) {
+                    list.add(orderList.get(i));
+                    integerList.add(quantityList.get(i));
+                }
+            }
+
+            if (list.size() > 0) {
+                StaticData.PRODUCT_ORDER_MAP.put(StaticData.MERCHANT_LIST.get(j).getMerchantId(), list);
+                StaticData.QUANTITY_ORDER_MAP.put(StaticData.MERCHANT_LIST.get(j).getMerchantId(), integerList);
+            }
+        }
+
+        if (isFromMerchantActivity)
+            startActivity(intent);
+        setResult(3, intent);
+        finish();
+    }
+
     private void totalPriceQuantity() {
         price = 0;
         totalDiscount = 0;
@@ -632,6 +667,10 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
         @Override
         protected Void doInBackground(Void... voids) {
             synchronized (this) {
+                Intent intent = getIntent();
+                if (intent.getBooleanExtra(IS_FROM_MERCHANT, false)) {
+                    isFromMerchantActivity = true;
+                }
                 for (int i = 0; i < StaticData.MERCHANT_LIST.size(); i++) {
                     if (StaticData.PRODUCT_ORDER_MAP.containsKey(StaticData.MERCHANT_LIST.get(i).getMerchantId())) {
                         if (StaticData.PRODUCT_ORDER_MAP.get(StaticData.MERCHANT_LIST.get(i).getMerchantId()).size() > 0) {
@@ -643,11 +682,11 @@ public class ConfirmOrderActivity extends BaseActivity implements View.OnClickLi
                     }
                 }
 
-                for (int i = 0; i < quantityList.size(); i++) {
+                for (int i = 0; i < quantityList.size(); ) {
                     if (quantityList.get(i) == 0) {
                         orderList.remove(i);
                         quantityList.remove(i);
-                    }
+                    } else i++;
                 }
 
                 confirmOrderAdapter.setList(orderList, quantityList);

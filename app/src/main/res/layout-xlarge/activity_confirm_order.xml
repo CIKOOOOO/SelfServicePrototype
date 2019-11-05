@@ -130,7 +130,7 @@
                             android:text="Change"
                             android:textAllCaps="false"
                             android:textColor="@color/cerulean_palette"
-                            android:textSize="@dimen/text_medium_25sp" />
+                            android:textSize="@dimen/text_small_17sp" />
 
                     </RelativeLayout>
 
@@ -231,7 +231,7 @@
             <Button
                 android:id="@+id/btn_cancel_confirm_order"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="100dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="20dp"
@@ -240,22 +240,32 @@
                 android:text="@string/back"
                 android:textAllCaps="false"
                 android:textColor="@color/cerulean_palette"
-                android:textSize="@dimen/text_large_45sp" />
+                android:textSize="@dimen/text_large_30sp" />
 
             <Button
                 android:id="@+id/btn_order_confirm_order"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="100dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:background="@drawable/selection_athens_iron"
-                android:text="Checkout"
+                android:background="@drawable/selection_turqoise_cerulean"
+                android:paddingStart="80dp"
+                android:text="Pay"
                 android:textAllCaps="false"
-                android:textColor="@color/cerulean_palette"
-                android:textSize="@dimen/text_large_45sp" />
+                android:textColor="@color/white_color"
+                android:textSize="@dimen/text_large_30sp" />
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="200dp"
+            android:background="@drawable/ic_money" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -320,10 +330,10 @@
             android:id="@+id/text_timer_confirm_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black_color"
             android:layout_below="@id/text_waiting_payment_confirm_order"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black_color" />
     </RelativeLayout>
 
     <RelativeLayout

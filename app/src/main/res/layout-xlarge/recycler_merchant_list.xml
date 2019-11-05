@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="230dp"
+    android:id="@+id/recycler_card_merchant_list"
     android:layout_height="wrap_content"
     android:layout_margin="20dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/white_color"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="5dp">
 
-    <ImageView
-        android:id="@+id/recycler_image_merchant_list"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerInParent="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/recycler_text_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/recycler_image_merchant_list"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:textColor="@color/black_color"
-        android:textSize="50sp"
-        android:visibility="gone" />
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/recycler_image_merchant_list"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:maxWidth="220dp"
+            android:minWidth="180dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black_color" />
+
+        <TextView
+            android:id="@+id/recycler_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:textAlignment="center"
+            android:textColor="@color/black_color"
+            android:textSize="@dimen/text_large_30sp"
+            android:visibility="visible" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

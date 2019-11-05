@@ -14,16 +14,15 @@ public class PrefConfig {
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.pref_file), Context.MODE_PRIVATE);
     }
 
-    public void saveOrderType(String orderTypeId, String orderType) {
+    public void setTutorial(boolean check) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.pref_order_type), orderType);
-        editor.putString(context.getString(R.string.pref_order_type), orderTypeId);
+        editor.putBoolean(context.getString(R.string.pref_tutorial), check);
         editor.commit();
     }
 
-//    public String getOrderType() {
-//        return sharedPreferences.getString(context.getString(R.string.pref_order_type), "");
-//    }
+    public boolean isShow() {
+        return sharedPreferences.getBoolean(context.getString(R.string.pref_tutorial), false);
+    }
 //
 //    public String getOrderTypeId() {
 //        return sharedPreferences.getString(context.getString(R.string.pref_order_type_id), "");

@@ -26,6 +26,7 @@ import com.andrew.selfserviceprototype.Model.Product;
 import com.andrew.selfserviceprototype.R;
 import com.andrew.selfserviceprototype.Utils.BaseActivity;
 import com.andrew.selfserviceprototype.Utils.Constant;
+import com.andrew.selfserviceprototype.Utils.PrefConfig;
 import com.andrew.selfserviceprototype.Utils.StaticData;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -72,7 +73,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ads_product.enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
-                if (response.body().getResponse().equals("ok")) {
+                if (response.body() != null && response.body().getResponse().equals("ok")) {
                     StaticData.PRODUCT_ADS_LIST.clear();
                     StaticData.PRODUCT_ADS_LIST.addAll(response.body().getProductList());
                 }
@@ -87,18 +88,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         call.enqueue(new Callback<MerchantData>() {
             @Override
             public void onResponse(Call<MerchantData> call, Response<MerchantData> response) {
-                if (response.body().getMerchantDataList() != null) {
-                    merchantData.addAll(response.body().getMerchantDataList());
-                    /*
-                     * We need to clear this merchant static list, because it will causes redundant data
-                     * so we clear and database can add the new one
-                     * */
-                    StaticData.MERCHANT_LIST.clear();
-                    StaticData.MERCHANT_LIST.addAll(response.body().getMerchantDataList());
-                    carouselView.setImageListener(imageListener);
-                    carouselView.setPageCount(4);
-                } else {
-                    Log.e(TAG, "Merchant Data is null!!! CALL EMERGENCY!!!");
+                if (response.body() != null) {
+                    if (response.body().getMerchantDataList() != null) {
+                        merchantData.addAll(response.body().getMerchantDataList());
+                        /*
+                         * We need to clear this merchant static list, because it will causes redundant data
+                         * so we clear and database can add the new one
+                         * */
+                        StaticData.MERCHANT_LIST.clear();
+                        StaticData.MERCHANT_LIST.addAll(response.body().getMerchantDataList());
+                        carouselView.setImageListener(imageListener);
+                        carouselView.setPageCount(5);
+                    } else {
+                        Log.e(TAG, "Merchant Data is null!!! CALL EMERGENCY!!!");
+                    }
                 }
             }
 

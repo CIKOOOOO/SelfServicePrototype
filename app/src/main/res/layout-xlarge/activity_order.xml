@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.ContentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/text_total_price"
+            android:layout_above="@id/grid_dummy_00"
             android:layout_below="@id/carousel_image_promo_order"
             android:background="@drawable/rectangle_bottom_top_stroke_black"
             android:orientation="horizontal"
@@ -90,6 +90,8 @@
                     android:textSize="50sp"
                     android:textStyle="bold" />
 
+                <!--android:background="@drawable/transition_color"-->
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_my_order"
                     android:layout_width="match_parent"
@@ -98,19 +100,49 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/text_total_price"
+        <GridLayout
+            android:id="@+id/grid_dummy_00"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/ll_order_04"
-            android:fontFamily="sans-serif"
-            android:paddingStart="5dp"
-            android:paddingTop="4dp"
-            android:paddingEnd="5dp"
-            android:paddingBottom="4dp"
-            android:textColor="@color/black_color"
-            android:textSize="50sp"
-            android:textStyle="bold" />
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:columnCount="2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Total Pesanan (exc. Tax)"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <TextView
+                android:id="@+id/text_total_price_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=" : IDR 290.000,-"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Jumlah Pesanan"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+
+            <TextView
+                android:id="@+id/text_quantity_product_order"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text=" : 12 pcs"
+                android:textColor="@color/black_color"
+                android:textSize="@dimen/text_large_30sp" />
+        </GridLayout>
 
         <LinearLayout
             android:id="@+id/ll_order_04"
@@ -125,7 +157,7 @@
             <Button
                 android:id="@+id/btn_order_again_order"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="100dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
@@ -134,22 +166,32 @@
                 android:text="@string/back"
                 android:textAllCaps="false"
                 android:textColor="@color/cerulean_palette"
-                android:textSize="@dimen/text_large_45sp" />
+                android:textSize="@dimen/text_large_30sp" />
 
             <Button
                 android:id="@+id/btn_continue_order"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="100dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/rectangle_rounded_athens"
                 android:elevation="2dp"
-                android:text="@string/continues"
+                android:paddingStart="80dp"
+                android:text="Checkout"
                 android:textAllCaps="false"
                 android:textColor="@color/cerulean_palette"
-                android:textSize="@dimen/text_large_45sp" />
+                android:textSize="@dimen/text_large_30sp" />
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="240dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/ic_trolley" />
     </RelativeLayout>
 
     <FrameLayout
@@ -366,6 +408,51 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relative_tutorial_order"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blue_palette"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image_tutorial_order"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="200dp"
+            android:background="@drawable/img_order_tutorial" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_tutorial_order"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/white_color">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="100dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="100dp"
+                android:layout_marginBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Kamu bisa memesan makanan dari toko yang berbeda dalam 1 waktu yang sama lohhhhh"
+                    android:textAlignment="center"
+                    android:textColor="@color/blue_palette"
+                    android:textSize="@dimen/text_large_30sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/relative_order_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -382,4 +469,4 @@
             app:pv_progressStyle="@style/CircularProgress" />
 
     </RelativeLayout>
-</androidx.appcompat.widget.ContentFrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

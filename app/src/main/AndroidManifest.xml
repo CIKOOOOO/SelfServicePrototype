@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name=".Activity.MerchantListActivity"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.OrderActivity"
