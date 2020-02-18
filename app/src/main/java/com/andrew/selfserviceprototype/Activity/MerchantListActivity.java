@@ -1,5 +1,6 @@
 package com.andrew.selfserviceprototype.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -21,13 +23,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +64,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+@SuppressLint("NewApi")
 public class MerchantListActivity extends BaseActivity implements MerchantListAdapter.imageOnClick
         , View.OnClickListener {
     public static final String GETTING_MERCHANT_DATA = "get_merchant_data";
@@ -72,8 +79,9 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
     private TextView text_qty, text_price;
     private RelativeLayout relative_ads;
     private Button checkout;
+    private EditText edit_search;
 
-    private List<MerchantData> dataList;
+    private List<MerchantData> dataList, searchDataList;
 
     private int adsPosition;
     private long totalPrice, totalItem;
@@ -133,6 +141,7 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
 //        ImageButton imageButtonCard = findViewById(R.id.image_button_trolley_merchant_list);
 //        ImageButton imageButtonBack = findViewById(R.id.img_btn_back_merchant_list);
         Button cancel_all = findViewById(R.id.btn_cancel_merchant_list);
+        edit_search = findViewById(R.id.edit_text_search_merchant_list);
 
         checkout = findViewById(R.id.btn_checkout_merchant_list);
         text_qty = findViewById(R.id.text_quantity_product_merchant_list);
@@ -156,6 +165,8 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
                 }
             }
         });
+
+        searchDataList = new ArrayList<>();
         dataList = new ArrayList<>();
 
         DecodeBitmap.setScaledImageView(background, R.drawable.asset_background_grid, this);
@@ -167,6 +178,9 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
         checkout.setOnClickListener(this);
         cancel_all.setOnClickListener(this);
         btn_add_cart.setOnClickListener(this);
+        edit_search.setOnClickListener(this);
+
+
 //        imageButtonBack.setOnClickListener(this);
 //        linearCart.setOnClickListener(this);
 //        imageButtonCard.setOnClickListener(this);
@@ -184,10 +198,41 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
             dataList.add(model);
         }
 
-        merchantListAdapter = new MerchantListAdapter(this, dataList, this);
+        searchDataList.addAll(dataList);
+
+        merchantListAdapter = new MerchantListAdapter(this, searchDataList, this);
         recyclerView.setAdapter(merchantListAdapter);
         carouselView.setImageListener(imageListener);
         carouselView.setPageCount(StaticData.PRODUCT_ADS_LIST.size());
+
+        edit_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchDataList.clear();
+
+                if (charSequence.toString().isEmpty())
+                    searchDataList.addAll(dataList);
+                else
+                    for (MerchantData data : dataList) {
+                        if (data.getMerchantName().toLowerCase().trim().contains(charSequence.toString().toLowerCase().trim()) && !data.getMerchantId().equals("null")) {
+                            searchDataList.add(data);
+                        }
+                    }
+
+                merchantListAdapter.setMerchantData(searchDataList);
+                merchantListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         carouselView.setImageClickListener(new ImageClickListener() {
             @Override
@@ -233,20 +278,8 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
     @Override
     public void onClick(int position) {
         Intent intent = new Intent(MerchantListActivity.this, OrderActivity.class);
-        intent.putExtra(OrderActivity.MERCHANT_DATA, dataList.get(position));
+        intent.putExtra(OrderActivity.MERCHANT_DATA, searchDataList.get(position));
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.e("asd", "masuk");
-        if (resultCode == 3) {
-            String MID = data.getStringExtra(OrderActivity.MID);
-            Intent intent = new Intent(MerchantListActivity.this, OrderActivity.class);
-            intent.putExtra(OrderActivity.MERCHANT_DATA, new MerchantData("", MID, "", "", "", "", ""));
-            startActivity(intent);
-        }
     }
 
     ImageListener imageListener = new ImageListener() {
@@ -314,6 +347,9 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
                     });
                     builder.show();
                 } else finish();
+                break;
+            case R.id.edit_text_search_merchant_list:
+                edit_search.setCursorVisible(true);
                 break;
         }
     }

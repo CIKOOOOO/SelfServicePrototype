@@ -32,6 +32,7 @@
             android:layout_marginBottom="10dp">
 
             <EditText
+                android:id="@+id/edit_text_search_merchant_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -42,6 +43,7 @@
                 android:fontFamily="@font/sniglet_reguler"
                 android:hint="Search"
                 android:maxLines="1"
+
                 android:textSize="@dimen/text_large_30sp" />
 
             <ImageButton

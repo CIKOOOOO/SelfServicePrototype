@@ -40,6 +40,10 @@ public class MerchantListAdapter extends RecyclerView.Adapter<MerchantListAdapte
         void onClick(int position);
     }
 
+    public void setMerchantData(List<MerchantData> merchantData) {
+        this.merchantData = merchantData;
+    }
+
     public void setLastPosition(int lastPosition) {
         this.lastPosition = lastPosition;
     }
@@ -82,7 +86,7 @@ public class MerchantListAdapter extends RecyclerView.Adapter<MerchantListAdapte
                     .load(Constant.URL + md.getMerchantIcon())
                     .into(holder.imageView);
 
-            if (!md.getMerchantImagePromo().isEmpty())
+            if (md.getMerchantImagePromo().isEmpty())
                 holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.athens_gray_palette));
             else
                 holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.white_color));
