@@ -94,7 +94,7 @@ public class MerchantListActivity extends BaseActivity implements MerchantListAd
         StaticData.QUANTITY_ORDER_MAP.clear();
         initVar();
 
-        System.out.println("Test Push");
+        System.out.println("Test Push2");
     }
 
     @Override
